@@ -1,6 +1,6 @@
-﻿namespace BLL.DTO
+﻿namespace WebHospitalSystem.Models
 {
-    public class AppointmentDTO
+    public class AppointmentVM
     {
         public long AppointmentId { get; set; }
         public int DoctorId { get; set; }

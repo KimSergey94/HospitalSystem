@@ -16,7 +16,6 @@ namespace BLL.Services
             Database = uow;
         }
 
-
         public void AddPatient(PatientDTO patientDTO)
         {
             //// применяем скидку

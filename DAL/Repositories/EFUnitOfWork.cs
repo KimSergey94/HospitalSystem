@@ -1,9 +1,7 @@
 ﻿using DAL.EF;
+using DAL.Entities;
+using DAL.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -44,7 +42,7 @@ namespace DAL.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public IRepository<Patient> Patients
+        public IRepositoryLong<Patient> Patients
         {
             get
             {
@@ -64,7 +62,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IRepository<Appointment> Appointments
+        public IRepositoryLong<Appointment> Appointments
         {
             get
             {
@@ -74,7 +72,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IRepository<AppointmentRecord> AppointmentRecords
+        public IRepositoryLong<AppointmentRecord> AppointmentRecords
         {
             get
             {

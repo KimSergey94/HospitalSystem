@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace BLL.DTO
+namespace WebHospitalSystem.Models
 {
-    public class AppointmentRecordDTO
+    public class AppointmentRecordVM
     {
         public long AppointmentRecordId { get; set; }
         public long AppointmentId { get; set; }

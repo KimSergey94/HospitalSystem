@@ -1,6 +1,6 @@
-﻿namespace DAL.Entities
+﻿namespace WebHospitalSystem.Models
 {
-    public class Patient
+    public class PatientVM
     {
         public long PatientId { get; set; }
         public string FirstName { get; set; }

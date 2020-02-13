@@ -1,14 +1,13 @@
 ﻿using DAL.Entities;
-using System;
 
 namespace DAL.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : System.IDisposable
     {
-        IRepository<Patient> Patients { get; }
+        IRepositoryLong<Patient> Patients { get; }
         IRepository<Doctor> Doctors { get; }
-        IRepository<Appointment> Appointments { get; }
-        IRepository<AppointmentRecord> AppointmentRecords { get; }
+        IRepositoryLong<Appointment> Appointments { get; }
+        IRepositoryLong<AppointmentRecord> AppointmentRecords { get; }
         void Save();
     }
 }
