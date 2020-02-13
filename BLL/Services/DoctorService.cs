@@ -18,18 +18,15 @@ namespace BLL.Services
 
         public void AddDoctor(DoctorDTO doctorDTO)
         {
-            //// применяем скидку
-            //decimal sum = new Discount(0.1m).GetDiscount(orderDto.Price);
-            //Order order = new Order
-            //{
-            //    Date = DateTime.Now,
-            //    UserId = 2,
-            //    Sum = sum,
-            //    Name = orderDto.Name,
-            //    Price = orderDto.Price
-            //}; 
-            //Database.Orders.Create(order); 
-            //Database.Save();
+            // применяем скидку
+            Doctor doctor = new Doctor
+            {
+                FirstName = doctorDTO.FirstName,
+                LastName = doctorDTO.LastName,
+                PhoneNumber= doctorDTO.PhoneNumber
+            };
+            Database.Doctors.Create(doctor);
+            Database.Save();
         }
 
         public void Dispose()

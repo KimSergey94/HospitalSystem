@@ -23,6 +23,11 @@ namespace WebHospitalSystem.Controllers
             appointmentService = _appointmentService;
         }
 
+        //public HomeController() 
+        //{
+
+        //}
+
         public ActionResult Index()
         {
             IEnumerable<DoctorDTO> doctorDTOs = doctorService.GetDoctors();
@@ -58,13 +63,13 @@ namespace WebHospitalSystem.Controllers
         //////////////////////////////////////////
 
 
-        public ActionResult AddPatient()
-        {
-            //IEnumerable<AppointmentDTO> orderDtos = orderService.GetOrders();
-            //var mapper = new MapperConfiguration(cfg => cfg.CreateMap<OrderDTO, OrderVM>()).CreateMapper();
-            //var orders = mapper.Map<IEnumerable<OrderDTO>, List<OrderVM>>(orderDtos);
-            //return View(orders);
-        }
+        //public ActionResult AddPatient()
+        //{
+        //    IEnumerable<AppointmentDTO> orderDtos = orderService.GetOrders();
+        //    var mapper = new MapperConfiguration(cfg => cfg.CreateMap<OrderDTO, OrderVM>()).CreateMapper();
+        //    var orders = mapper.Map<IEnumerable<OrderDTO>, List<OrderVM>>(orderDtos);
+        //    return View(orders);
+        //}
 
             public ActionResult About()
         {

@@ -18,17 +18,17 @@ namespace DAL.Repositories
 
         public IEnumerable<AppointmentRecord> GetAll()
         {
-            return db.AppointmentRecords;
+            return db.AppointmentRecord;
         }
 
         public AppointmentRecord Get(long id)
         {
-            return db.AppointmentRecords.Find(id);
+            return db.AppointmentRecord.Find(id);
         }
 
         public void Create(AppointmentRecord item)
         {
-            db.AppointmentRecords.Add(item);
+            db.AppointmentRecord.Add(item);
         }
 
         public void Update(AppointmentRecord item)
@@ -38,14 +38,14 @@ namespace DAL.Repositories
 
         public IEnumerable<AppointmentRecord> Find(Func<AppointmentRecord, Boolean> predicate)
         {
-            return db.AppointmentRecords.Where(predicate).ToList();
+            return db.AppointmentRecord.Where(predicate).ToList();
         }
 
         public void Delete(long id)
         {
-            AppointmentRecord item = db.AppointmentRecords.Find(id);
+            AppointmentRecord item = db.AppointmentRecord.Find(id);
             if (item != null)
-                db.AppointmentRecords.Remove(item);
+                db.AppointmentRecord.Remove(item);
         }
 
     }

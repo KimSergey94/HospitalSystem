@@ -18,17 +18,17 @@ namespace DAL.Repositories
 
         public IEnumerable<Doctor> GetAll()
         {
-            return db.Doctors;
+            return db.Doctor;
         }
 
         public Doctor Get(int id)
         {
-            return db.Doctors.Find(id);
+            return db.Doctor.Find(id);
         }
 
         public void Create(Doctor item)
         {
-            db.Doctors.Add(item);
+            db.Doctor.Add(item);
         }
 
         public void Update(Doctor item)
@@ -38,14 +38,14 @@ namespace DAL.Repositories
 
         public IEnumerable<Doctor> Find(Func<Doctor, Boolean> predicate)
         {
-            return db.Doctors.Where(predicate).ToList();
+            return db.Doctor.Where(predicate).ToList();
         }
 
         public void Delete(int id)
         {
-            Doctor item = db.Doctors.Find(id);
+            Doctor item = db.Doctor.Find(id);
             if (item != null)
-                db.Doctors.Remove(item);
+                db.Doctor.Remove(item);
         }
 
     }

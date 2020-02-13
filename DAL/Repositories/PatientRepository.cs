@@ -18,17 +18,17 @@ namespace DAL.Repositories
 
         public IEnumerable<Patient> GetAll()
         {
-            return db.Patients;
+            return db.Patient;
         }
 
         public Patient Get(long id)
         {
-            return db.Patients.Find(id);
+            return db.Patient.Find(id);
         }
 
         public void Create(Patient item)
         {
-            db.Patients.Add(item);
+            db.Patient.Add(item);
         }
 
         public void Update(Patient item)
@@ -38,14 +38,14 @@ namespace DAL.Repositories
 
         public IEnumerable<Patient> Find(Func<Patient, Boolean> predicate)
         {
-            return db.Patients.Where(predicate).ToList();
+            return db.Patient.Where(predicate).ToList();
         }
 
         public void Delete(long id)
         {
-            Patient item = db.Patients.Find(id);
+            Patient item = db.Patient.Find(id);
             if (item != null)
-                db.Patients.Remove(item);
+                db.Patient.Remove(item);
         }
 
     }
