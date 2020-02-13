@@ -4,8 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebHospitalSystem", "WebHospitalSystem\WebHospitalSystem.csproj", "{11AAC9F1-A2B6-424F-B264-EC0FFC345954}"
+	ProjectSection(ProjectDependencies) = postProject
+		{15660421-79B5-4220-8D5A-1878EB4CE00F} = {15660421-79B5-4220-8D5A-1878EB4CE00F}
+		{F0C6E175-0116-4997-B066-B49AB057A99D} = {F0C6E175-0116-4997-B066-B49AB057A99D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{15660421-79B5-4220-8D5A-1878EB4CE00F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F0C6E175-0116-4997-B066-B49AB057A99D} = {F0C6E175-0116-4997-B066-B49AB057A99D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{F0C6E175-0116-4997-B066-B49AB057A99D}"
 EndProject
