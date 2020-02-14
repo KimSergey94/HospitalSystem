@@ -43,5 +43,14 @@ namespace BLL.Services
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Patient, PatientDTO>()).CreateMapper();
             return mapper.Map<IEnumerable<Patient>, List<PatientDTO>>(Database.Patients.GetAll());
         }
+
+        public bool isIINAvailable(string IIN)
+        {
+            var patient = (Patient)Database.Patients.Find(x => x.IIN == IIN);
+            if (patient == null)
+                return true;
+            else
+                return false;
+        }
     }
 }

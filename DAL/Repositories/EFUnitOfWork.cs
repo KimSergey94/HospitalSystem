@@ -12,6 +12,8 @@ namespace DAL.Repositories
         private DoctorRepository doctorRepository;
         private AppointmentRepository appointmentRepository;
         private AppointmentRecordRepository appointmentRecordRepository;
+        private UserRepository userRepository;
+        private RoleRepository roleRepository;
 
         public EFUnitOfWork(string connectionString)
         {
@@ -79,6 +81,24 @@ namespace DAL.Repositories
                 if (appointmentRecordRepository == null)
                     appointmentRecordRepository = new AppointmentRecordRepository(db);
                 return appointmentRecordRepository;
+            }
+        }
+        public IRepositoryLong<User> Users
+        {
+            get
+            {
+                if (userRepository == null)
+                    userRepository = new UserRepository(db);
+                return userRepository;
+            }
+        }
+        public IRepository<Role> Roles
+        {
+            get
+            {
+                if (roleRepository == null)
+                    roleRepository = new RoleRepository(db);
+                return roleRepository;
             }
         }
     }

@@ -8,6 +8,8 @@ namespace DAL.Interfaces
         IRepository<Doctor> Doctors { get; }
         IRepositoryLong<Appointment> Appointments { get; }
         IRepositoryLong<AppointmentRecord> AppointmentRecords { get; }
+        IRepositoryLong<User> Users { get; }
+        IRepository<Role> Roles { get; }
         void Save();
     }
 }

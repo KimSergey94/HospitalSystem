@@ -52,15 +52,19 @@
     <Compile Include="DTO\AppointmentRecordDTO.cs" />
     <Compile Include="DTO\DoctorDTO.cs" />
     <Compile Include="DTO\PatientDTO.cs" />
+    <Compile Include="DTO\RoleDTO.cs" />
+    <Compile Include="DTO\UserDTO.cs" />
     <Compile Include="Infrastructure\ServiceModule.cs" />
     <Compile Include="Infrastructure\ValidationException.cs" />
     <Compile Include="Interfaces\IAppointmentService.cs" />
     <Compile Include="Interfaces\IDoctorService.cs" />
     <Compile Include="Interfaces\IPatientService.cs" />
+    <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppointmentService.cs" />
     <Compile Include="Services\DoctorService.cs" />
     <Compile Include="Services\PatientService.cs" />
+    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

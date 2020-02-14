@@ -15,5 +15,8 @@ namespace DAL.Entities
         public string PhoneNumber { get; set; }
         [DataType("NVARCHAR"), MaxLength(255)] 
         public string Address { get; set; }
+
+        public long UserId { get; set; }
+        public User User { get; set; }
     }
 }

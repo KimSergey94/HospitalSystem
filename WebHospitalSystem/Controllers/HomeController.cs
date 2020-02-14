@@ -23,11 +23,6 @@ namespace WebHospitalSystem.Controllers
             appointmentService = _appointmentService;
         }
 
-        //public HomeController() 
-        //{
-
-        //}
-
         public ActionResult Index()
         {
             IEnumerable<DoctorDTO> doctorDTOs = doctorService.GetDoctors();

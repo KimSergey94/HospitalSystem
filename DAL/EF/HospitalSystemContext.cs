@@ -10,6 +10,8 @@ namespace DAL.EF
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Appointment> Appointment { get; set; }
         public DbSet<AppointmentRecord> AppointmentRecord { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<Role> Role { get; set; }
         static HospitalSystemContext()
         {
             Database.SetInitializer<HospitalSystemContext>(new HospitalSystemDbInitializer());
@@ -46,6 +48,8 @@ namespace DAL.EF
             db.AppointmentRecord.Add(new AppointmentRecord { AppointmentId = 2, Symptom = "Иллюзии, галлюцинации, бред, недостаток речи и мыслей", Date = new System.DateTime(2018, 09, 18, 15, 33, 32)});
             db.AppointmentRecord.Add(new AppointmentRecord { AppointmentId = 3, Symptom = "Формирование гематомы в районе верхней части предплечья, местное повышение температура и болезненное ощущения при прикосновении. Гиперемия, болезненность при движении ", Date = new System.DateTime(2019, 02, 14, 16, 21, 09)});
             db.SaveChanges();
+
+            ///user roles
         }
     }
 }
