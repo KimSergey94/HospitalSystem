@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using BLL.DTO;
+using BLL.Infrastructure;
 using BLL.Interfaces;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -26,21 +28,32 @@ namespace WebHospitalSystem.Controllers
         public ActionResult Login(UserVM user)
         {
             if (ModelState.IsValid) {
-                var userDTO = userService.GetUser(user.Login);
-                user = new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserVM>()).CreateMapper()
+                try {
+                    var userDTO = userService.GetUser(user.Login);
+                    user = new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserVM>()).CreateMapper()
                     .Map<UserDTO, UserVM>(userDTO);
 
-                if (user != null) {
-                    Session["Login"] = user.Login;
-                    Session["Id"] = user.UserId;
-                    Session["Role"] = userService.GetUserRole(userDTO);
-                    FormsAuthentication.SetAuthCookie(user.Login, true);
-                    return RedirectToAction("Index", "Home");
-                } else {
-                    ModelState.AddModelError("", "The user with such login and password does not exist.");
+                    if (user != null) {
+                        Session["Login"] = user.Login;
+                        Session["Id"] = user.UserId;
+                        Session["Role"] = userService.GetUserRole(userDTO);
+                        if (user.RoleId == 1)
+                            Session["DoctorId"] = GetDoctors().FirstOrDefault(id => id.UserId == user.UserId).DoctorId;
+                        else
+                            Session["PatientId"] = GetPatients().FirstOrDefault(id => id.UserId == user.UserId).PatientId;
+                        FormsAuthentication.SetAuthCookie(user.Login, true);
+                        return RedirectToAction("Index", "Home");
+                    } else {
+                        ModelState.AddModelError("", "Пользователь с таким логином не существует.");
+                    }
+                } catch (ValidationException ex) {
+                    Debug.WriteLine("Возникло исключение (Пользователь с введенным логином не найден): " + ex.Message);
                 }
+                return View(user);
+            } else {
+                ModelState.AddModelError("", "Введенный логин или пароль не верны.");
+                return View(user);
             }
-            return View(user);
         }
 
         private List<UserVM> GetUsers() {
@@ -57,7 +70,6 @@ namespace WebHospitalSystem.Controllers
             return new MapperConfiguration(cfg => cfg.CreateMap<DoctorDTO, DoctorVM>()).CreateMapper()
                 .Map<IEnumerable<DoctorDTO>, List<DoctorVM>>(doctorService.GetDoctors());
         }
-        public ActionResult Register() {  return View(); }
 
         [Authorize(Roles = "Doctor")]
         public ActionResult RegisterPatient() { return View(); }
@@ -142,7 +154,7 @@ namespace WebHospitalSystem.Controllers
                         Session["Login"] = user.Login;
                         Session["Id"] = user.UserId;
                         Session["Role"] = "Doctor";
-                        Session["DoctorId"] = doctorService.GetDoctors().FirstOrDefault(id => id.UserId == user.UserId).DoctorId;
+                        Session["DoctorId"] = GetDoctors().FirstOrDefault(id => id.UserId == user.UserId).DoctorId;
                         FormsAuthentication.SetAuthCookie(model.Login, true);
                         return RedirectToAction("Index", "Home");
                     }
@@ -154,16 +166,16 @@ namespace WebHospitalSystem.Controllers
             return View(model);
         }
 
-        
         public ActionResult Logoff()
         {
             Session["Login"] = null;
             Session["Id"] = null;
             Session["Role"] = null;
+            Session["DoctorId"] = null;
+            Session["PatientId"] = null;
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
-
 
         protected override void Dispose(bool disposing) {
             userService.Dispose();

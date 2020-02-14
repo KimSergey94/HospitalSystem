@@ -4,7 +4,6 @@ namespace WebHospitalSystem.Models
 {
     public class UserVM
     {
-        [Key]
         [Display(Name = "ID пользователя")]
         public long UserId { get; set; }
 

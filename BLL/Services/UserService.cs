@@ -5,6 +5,7 @@ using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL.Services
 {
@@ -45,7 +46,7 @@ namespace BLL.Services
             return userRole.Name;
         }
 
-        public List<UserDTO> GetUsers()
+        public IEnumerable<UserDTO> GetUsers()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>()).CreateMapper();
             return mapper.Map<IEnumerable<User>, List<UserDTO>>(Database.Users.GetAll());
@@ -66,7 +67,7 @@ namespace BLL.Services
         {
             if (login == null)
                 throw new ValidationException("Не установлен login пользователя", "");
-            var user = GetUsers().Find(x => x.Login == login); 
+            var user = Database.Users.Find(x => x.Login == login).ElementAtOrDefault(0); 
             if (user == null)
                 throw new ValidationException("Пользователь не найден", "");
             return new UserDTO

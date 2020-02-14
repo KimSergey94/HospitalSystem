@@ -7,7 +7,7 @@ namespace BLL.Interfaces
     {
         void RegisterUser(UserDTO userDTO);
         string GetUserRole(UserDTO userDTO);
-        List<UserDTO> GetUsers();
+        IEnumerable<UserDTO> GetUsers();
         void AddUser(UserDTO userDTO);
         UserDTO GetUser(string email);
         void Dispose();
