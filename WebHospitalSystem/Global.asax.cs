@@ -20,9 +20,11 @@ namespace WebHospitalSystem
             NinjectModule patientModule = new PatientModule();
             NinjectModule doctorModule = new DoctorModule();
             NinjectModule appointmentModule = new AppointmentModule();
+            NinjectModule userModule = new UserModule();
             NinjectModule serviceModule = new ServiceModule("DefaultConnection");
-            var kernel = new Ninject.StandardKernel(patientModule, doctorModule, appointmentModule, serviceModule); 
+            var kernel = new Ninject.StandardKernel(patientModule, doctorModule, appointmentModule, userModule, serviceModule); 
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+            ModelValidatorProviders.Providers.Clear();
         }
     }
 }

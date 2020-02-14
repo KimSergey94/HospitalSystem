@@ -1,0 +1,47 @@
+﻿@model IEnumerable<WebHospitalSystem.Models.AppointmentVM>
+
+@{
+    ViewBag.Title = "Список посещений";
+}
+
+<h2>Список врачей больницы</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.AppointmentId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DoctorId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PatientId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Diagnosis)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppointmentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DoctorId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Diagnosis)
+            </td>
+            <td>
+                @Html.ActionLink("Купить", "Buy") <!-- , new { name = item.Name, price = (int)item.Price })-->
+            </td>
+        </tr>
+    }
+</table>
+

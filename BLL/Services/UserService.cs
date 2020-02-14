@@ -45,7 +45,7 @@ namespace BLL.Services
             return userRole.Name;
         }
 
-        public IEnumerable<UserDTO> GetUsers()
+        public List<UserDTO> GetUsers()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>()).CreateMapper();
             return mapper.Map<IEnumerable<User>, List<UserDTO>>(Database.Users.GetAll());
@@ -66,7 +66,7 @@ namespace BLL.Services
         {
             if (login == null)
                 throw new ValidationException("Не установлен login пользователя", "");
-            var user = (User)Database.Users.Find(x => x.Login == login); 
+            var user = GetUsers().Find(x => x.Login == login); 
             if (user == null)
                 throw new ValidationException("Пользователь не найден", "");
             return new UserDTO

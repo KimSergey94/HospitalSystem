@@ -31,6 +31,7 @@ namespace WebHospitalSystem.Controllers
             return View(doctors);
         }
 
+        [Authorize(Roles="Doctor")]
         public ActionResult ListDoctors()
         {
             IEnumerable<DoctorDTO> doctorDTOs = doctorService.GetDoctors();
@@ -39,6 +40,7 @@ namespace WebHospitalSystem.Controllers
             return View(doctors);
         }
 
+        [Authorize(Roles = "Doctor")]
         public ActionResult ListPatients()
         {
             IEnumerable<PatientDTO> patientDTOs = patientService.GetPatients();
@@ -47,6 +49,7 @@ namespace WebHospitalSystem.Controllers
             return View(patients);
         }
 
+        [Authorize(Roles = "Doctor, Patient")]
         public ActionResult ListAppointments()
         {
             IEnumerable<AppointmentDTO> appointmentDTOs = appointmentService.GetAppointments();
