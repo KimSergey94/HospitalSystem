@@ -2,7 +2,7 @@
 using BLL.DTO;
 using BLL.Infrastructure;
 using BLL.Interfaces;
-using System.Collections.Generic;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
@@ -37,10 +37,10 @@ namespace WebHospitalSystem.Controllers
                         Session["Login"] = user.Login;
                         Session["Id"] = user.UserId;
                         Session["Role"] = userService.GetUserRole(userDTO);
-                        if (user.RoleId == 1)
-                            Session["DoctorId"] = GetDoctors().FirstOrDefault(id => id.UserId == user.UserId).DoctorId;
-                        else
-                            Session["PatientId"] = GetPatients().FirstOrDefault(id => id.UserId == user.UserId).PatientId;
+                        if (user.RoleId == 1 && Session["DoctorId"] != null)
+                            Session["DoctorId"] = doctorService.GetDoctors().FirstOrDefault(id => id.UserId == user.UserId).DoctorId;
+                        else if (user.RoleId == 2 && Session["PatientId"] != null)
+                            Session["PatientId"] = patientService.GetPatients().FirstOrDefault(id => id.UserId == user.UserId).PatientId;
                         FormsAuthentication.SetAuthCookie(user.Login, true);
                         return RedirectToAction("Index", "Home");
                     } else {
@@ -56,20 +56,6 @@ namespace WebHospitalSystem.Controllers
             }
         }
 
-        private List<UserVM> GetUsers() {
-            return new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserVM>()).CreateMapper()
-                .Map<IEnumerable<UserDTO>, List<UserVM>>(userService.GetUsers());
-        }
-        private List<PatientVM> GetPatients()
-        {
-            return new MapperConfiguration(cfg => cfg.CreateMap<PatientDTO, PatientVM>()).CreateMapper()
-                .Map<IEnumerable<PatientDTO>, List<PatientVM>>(patientService.GetPatients());
-        }
-        private List<DoctorVM> GetDoctors()
-        {
-            return new MapperConfiguration(cfg => cfg.CreateMap<DoctorDTO, DoctorVM>()).CreateMapper()
-                .Map<IEnumerable<DoctorDTO>, List<DoctorVM>>(doctorService.GetDoctors());
-        }
 
         [Authorize(Roles = "Doctor")]
         public ActionResult RegisterPatient() { return View(); }
@@ -79,36 +65,30 @@ namespace WebHospitalSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RegisterPatient(RegisterPatientVM model) {
             if (ModelState.IsValid) {
-                UserVM user = GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
+                UserDTO user = userService.GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
                 
                 if (user == null) {
-                    var userDTO = new UserDTO {
-                        Login = model.Login,
-                        Password = model.Password,
-                        RoleId = 2
-                    };
-                    userService.AddUser(userDTO);
+                    model.RoleId = 2;
+                    userService.AddUser(MapToUserDTO(model));
 
                     // проверяем если пользователь удачно добавлен в бд
-                    var newUser = GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
-                    if (user != null) {
-                        if(patientService.isIINAvailable(model.IIN)) {
-                            PatientDTO patient = new PatientDTO
-                            {
-                                FirstName = model.FirstName,
-                                LastName = model.LastName,
-                                IIN = model.IIN,
-                                PhoneNumber = model.IIN,
-                                Address = model.Address,
-                                UserId = newUser.UserId
-                            };
-                            patientService.AddPatient(patient);
-                            Session["Login"] = newUser.Login;
-                            Session["Id"] = newUser.UserId;                 
-                            Session["Role"] = "Patient";
-                            Session["PatientId"] = patientService.GetPatients().FirstOrDefault(id => id.UserId == user.UserId).PatientId;
-                            FormsAuthentication.SetAuthCookie(model.Login, true);
-                            return RedirectToAction("Index", "Home");
+                    var newUser = userService.GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
+                    if (newUser != null) {
+                        try {
+                            if (patientService.isIINAvailable(model.IIN)) {
+                                model.UserId = newUser.UserId;
+                                model.RoleId = newUser.RoleId;
+                                patientService.AddPatient(MapToPatientDTO(model));
+                                Session["Login"] = newUser.Login;
+                                Session["Id"] = newUser.UserId;
+                                Session["Role"] = "Patient";
+                                Session["PatientId"] = patientService.GetPatients().FirstOrDefault(id => id.UserId == newUser.UserId).PatientId;
+                                FormsAuthentication.SetAuthCookie(model.Login, true);
+                                return RedirectToAction("Index", "Home");
+                            }
+                        }
+                        catch {
+                            ModelState.AddModelError("", "Ошибка регистрации пациента");
                         }
                     } else {
                         ModelState.AddModelError("", "Пациент с таким ИИН уже существует");
@@ -120,43 +100,40 @@ namespace WebHospitalSystem.Controllers
             return View(model);
         }
 
-
         [Authorize(Roles = "Doctor")]
         public ActionResult RegisterDoctor() { return View(); }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Doctor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RegisterDoctor(RegisterDoctorVM model)
         {
             if (ModelState.IsValid)
             {
-                UserVM user = GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
+                UserDTO user = userService.GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
 
                 if (user == null) {
-                    var userDTO = new UserDTO {
-                        Login = model.Login,
-                        Password = model.Password,
-                        RoleId = 1
-                    };
-                    userService.AddUser(userDTO);
+                    model.RoleId = 1;
+                    userService.AddUser(MapToUserDTO(model));
 
                     // проверяем если пользователь удачно добавлен в бд
-                    var newUser = GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
-                    if (user != null) {
-                        DoctorDTO doctorDTO = new DoctorDTO {
-                            FirstName = model.FirstName,
-                            LastName = model.LastName,
-                            PhoneNumber = model.PhoneNumber,
-                            UserId = newUser.UserId
-                        };
-                        doctorService.AddDoctor(doctorDTO);
-                        Session["Login"] = user.Login;
-                        Session["Id"] = user.UserId;
-                        Session["Role"] = "Doctor";
-                        Session["DoctorId"] = GetDoctors().FirstOrDefault(id => id.UserId == user.UserId).DoctorId;
-                        FormsAuthentication.SetAuthCookie(model.Login, true);
-                        return RedirectToAction("Index", "Home");
+                    var newUser = userService.GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
+                    if (newUser != null) {
+                        try
+                        {
+                            model.UserId = newUser.UserId;
+                            doctorService.AddDoctor(MapToDoctorDTO(model));
+                            Session["Login"] = newUser.Login;
+                            Session["Id"] = newUser.UserId;
+                            Session["Role"] = "Doctor";
+                            Session["DoctorId"] = doctorService.GetDoctors().FirstOrDefault(id => id.UserId == newUser.UserId).DoctorId;
+                            FormsAuthentication.SetAuthCookie(model.Login, true);
+                            return RedirectToAction("Index", "Home");
+                        }
+                        catch (Exception ex)
+                        {
+                            ModelState.AddModelError("", "Ошибка регистрации врача");
+                        }
                     }
                 }
                 else {
@@ -175,6 +152,47 @@ namespace WebHospitalSystem.Controllers
             Session["PatientId"] = null;
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
+        }
+
+        private UserDTO MapToUserDTO(RegisterPatientVM patientVM)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<RegisterPatientVM, UserDTO>()
+                .ForMember(dest => dest.Login, opt => opt.MapFrom(src => src.Login))
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
+                ).CreateMapper().Map<RegisterPatientVM, UserDTO>(patientVM);
+        }
+        private UserDTO MapToUserDTO(RegisterDoctorVM doctorVM)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<RegisterDoctorVM, UserDTO>()
+                .ForMember(dest => dest.Login, opt => opt.MapFrom(src => src.Login))
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
+                ).CreateMapper().Map<RegisterDoctorVM, UserDTO>(doctorVM);
+        }
+        private PatientDTO MapToPatientDTO(RegisterPatientVM patientVM)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<RegisterPatientVM, PatientDTO>()
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
+                .ForMember(dest => dest.IIN, opt => opt.MapFrom(src => src.IIN))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                ).CreateMapper().Map<RegisterPatientVM, PatientDTO>(patientVM);
+        }
+        private DoctorDTO MapToDoctorDTO(RegisterDoctorVM doctorVM)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<RegisterDoctorVM, DoctorDTO>()
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                ).CreateMapper().Map<RegisterDoctorVM, DoctorDTO>(doctorVM);
         }
 
         protected override void Dispose(bool disposing) {

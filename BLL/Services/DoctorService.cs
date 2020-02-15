@@ -23,7 +23,9 @@ namespace BLL.Services
             {
                 FirstName = doctorDTO.FirstName,
                 LastName = doctorDTO.LastName,
-                PhoneNumber= doctorDTO.PhoneNumber
+                Patronymic = doctorDTO.Patronymic,
+                PhoneNumber= doctorDTO.PhoneNumber,
+                UserId = doctorDTO.UserId
             };
             Database.Doctors.Create(doctor);
             Database.Save();

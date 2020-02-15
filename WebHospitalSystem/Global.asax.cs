@@ -16,7 +16,7 @@ namespace WebHospitalSystem
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
+            ModelValidatorProviders.Providers.Clear();
             NinjectModule patientModule = new PatientModule();
             NinjectModule doctorModule = new DoctorModule();
             NinjectModule appointmentModule = new AppointmentModule();
@@ -24,7 +24,6 @@ namespace WebHospitalSystem
             NinjectModule serviceModule = new ServiceModule("DefaultConnection");
             var kernel = new Ninject.StandardKernel(patientModule, doctorModule, appointmentModule, userModule, serviceModule); 
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
-            ModelValidatorProviders.Providers.Clear();
         }
     }
 }

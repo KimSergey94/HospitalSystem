@@ -24,6 +24,12 @@
     </p>
 
     <p>
+        @Html.LabelFor(model => model.Patronymic)<br />
+        @Html.EditorFor(model => model.Patronymic)
+        @Html.ValidationMessageFor(model => model.Patronymic)
+    </p>
+
+    <p>
         @Html.LabelFor(model => model.PhoneNumber)<br />
         @Html.EditorFor(model => model.PhoneNumber)
         @Html.ValidationMessageFor(model => model.PhoneNumber)

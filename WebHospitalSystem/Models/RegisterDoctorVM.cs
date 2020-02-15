@@ -4,6 +4,9 @@ namespace WebHospitalSystem.Models
 {
     public class RegisterDoctorVM
     {
+        public long UserId { get; set; }
+        public long RoleId { get; set; }
+
         [Required(ErrorMessage = "Введите имя")]
         [Display(Name = "Имя")]
         public string FirstName { get; set; }

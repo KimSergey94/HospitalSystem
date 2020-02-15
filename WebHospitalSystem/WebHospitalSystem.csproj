@@ -314,6 +314,8 @@
     <Content Include="Views\Home\ListPatients.cshtml" />
     <Content Include="Views\Home\ListDoctors.cshtml" />
     <Content Include="Views\Home\ListAppointments.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Home\ListUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

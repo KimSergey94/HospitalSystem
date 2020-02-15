@@ -4,6 +4,7 @@ using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL.Services
 {
@@ -16,20 +17,17 @@ namespace BLL.Services
             Database = uow;
         }
 
+        Patient MapToPatient(PatientDTO patientDTO)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<PatientDTO, Patient>()).CreateMapper()
+             .Map<PatientDTO, Patient>(patientDTO);
+        }
+        
+
         public void AddPatient(PatientDTO patientDTO)
         {
-            //// применяем скидку
-            //decimal sum = new Discount(0.1m).GetDiscount(orderDto.Price);
-            //Order order = new Order
-            //{
-            //    Date = DateTime.Now,
-            //    UserId = 2,
-            //    Sum = sum,
-            //    Name = orderDto.Name,
-            //    Price = orderDto.Price
-            //}; 
-            //Database.Orders.Create(order); 
-            //Database.Save();
+            Database.Patients.Create(MapToPatient(patientDTO));
+            Database.Save();
         }
 
 
@@ -46,7 +44,7 @@ namespace BLL.Services
 
         public bool isIINAvailable(string IIN)
         {
-            var patient = (Patient)Database.Patients.Find(x => x.IIN == IIN);
+            var patient = Database.Patients.Find(x => x.IIN == IIN).ElementAtOrDefault(0);
             if (patient == null)
                 return true;
             else

@@ -22,15 +22,12 @@ namespace DAL.EF
         {
             dbModelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             dbModelBuilder.Entity<Patient>().HasIndex(u => u.IIN).IsUnique();
-
-            //dbModelBuilder.Entity<User>().HasRequired(c => c.Patients).WithMany().WillCascadeOnDelete(false);
-            //dbModelBuilder.Entity<User>().HasRequired(c => c.Doctors).WithMany().WillCascadeOnDelete(false);
             dbModelBuilder.Entity<Patient>().HasRequired(s => s.User).WithMany().WillCascadeOnDelete(false); 
             dbModelBuilder.Entity<Doctor>().HasRequired(s => s.User).WithMany().WillCascadeOnDelete(false); 
         }
     }
 
-    public class HospitalSystemDbInitializer : DropCreateDatabaseAlways<HospitalSystemContext>
+    public class HospitalSystemDbInitializer : DropCreateDatabaseIfModelChanges<HospitalSystemContext>
     {
         protected override void Seed(HospitalSystemContext db)
         {

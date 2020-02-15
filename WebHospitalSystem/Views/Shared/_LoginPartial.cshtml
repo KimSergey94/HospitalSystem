@@ -1,0 +1,26 @@
+﻿@{
+    var login = Session["Login"];
+}
+
+@if (Request.IsAuthenticated && login != null && (string)login != "")
+{
+    var id = Session["Id"];
+    var role = Session["Role"];
+
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <ul class="nav navbar-nav navbar-right mr-6">
+            <li class="nav-item">
+                <a class="nav-link">@login</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Выйти из системы</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right ml-auto">
+        <li class="nav-item"><a href="/Account/Login" id="loginLink" class="nav-link">Вход в систему</a></li>
+    </ul>
+}
