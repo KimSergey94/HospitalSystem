@@ -1,0 +1,35 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Список пациентов</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/themes/base/jquery.ui.all.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.4/css/ui.jqgrid.min.css">
+    <script src="~/Scripts/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery-ui-1.10.0.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.4/jquery.jqgrid.min.js"></script>
+    <script src="~/Scripts/Patients.js" type="text/javascript"></script>
+    <style>
+        #delmodjqGPatients{
+            top: 40% !important;
+            left:40% !important;
+        }
+        #editmodjqGPatients{
+            top: 40% !important;
+            left:40% !important;
+        }
+    </style>
+</head>
+<body>
+    @Html.Partial("_navBar")
+    <h2>Список пациентов</h2>
+    <table id="jqGPatients"></table>
+    <div id="jqGridPager" style="height:27px"></div>
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>

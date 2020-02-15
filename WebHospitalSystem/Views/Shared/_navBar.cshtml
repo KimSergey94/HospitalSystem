@@ -1,0 +1,31 @@
+﻿<nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        </button>
+        <a class="navbar-brand" href="/">Клиника</a>
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav mr-auto">
+                <li class="nav-item"><a href="/Home/ListDoctors" class="nav-link">Врачи</a></li>
+                <li class="nav-item"><a href="/Home/ListPatients" class="nav-link">Пациенты</a></li>
+                <li class="nav-item"><a href="/Home/ListAppointments" class="nav-link">Прием пациентов</a></li>
+                <li class="nav-item"><a href="/Home/ListUsers" class="nav-link">Users</a></li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Найти пациента</a>
+                    <div class="dropdown-menu">
+                        <a href="/Account/FindPatientByIIN" class="dropdown-item">Найти пациента по ИИН</a>
+                        <a href="/Account/FindPatientByName" class="dropdown-item">Найти пациента по ФИО</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Регистрация</a>
+                    <div class="dropdown-menu">
+                        <a href="/Account/RegisterDoctor" class="dropdown-item">Регистрация врачей</a>
+                        <a href="/Account/RegisterPatient" class="dropdown-item">Регистрация пациентов</a>
+                    </div>
+                </li>
+            </ul>
+
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+</nav>

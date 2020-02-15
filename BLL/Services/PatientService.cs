@@ -30,6 +30,24 @@ namespace BLL.Services
             Database.Save();
         }
 
+        public void EditPatient(PatientDTO patientDTO)
+        {
+            Patient patient = Database.Patients.Find(x => x.PatientId == patientDTO.PatientId).First();
+            patient.FirstName = patientDTO.FirstName;
+            patient.LastName = patientDTO.LastName;
+            patient.Patronymic = patientDTO.Patronymic;
+            patient.IIN = patientDTO.IIN;
+            patient.PhoneNumber = patientDTO.PhoneNumber;
+            patient.Address = patientDTO.Address;
+            Database.Patients.Update(patient);
+            Database.Save();
+        }
+
+        public void DeletePatient(long id)
+        {
+            Database.Patients.Delete(id);
+            Database.Save();
+        }
 
         public void Dispose()
         {

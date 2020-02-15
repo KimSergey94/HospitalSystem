@@ -26,13 +26,7 @@
                             <a href="/Account/FindPatientByName" class="dropdown-item">Найти пациента по ФИО</a>
                         </div>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Регистрация</a>
-                        <div class="dropdown-menu">
-                            <a href="/Account/RegisterDoctor" class="dropdown-item">Регистрация врачей</a>
-                            <a href="/Account/RegisterPatient" class="dropdown-item">Регистрация пациентов</a>
-                        </div>
-                    </li>
+                    <li class="nav-item"><a href="/Account/RegisterDoctor" class="nav-link">Регистрация врачей</a></li>
                 </ul>
 
                 @Html.Partial("_LoginPartial")
@@ -43,7 +37,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Hospital System</p>
         </footer>
     </div>
 

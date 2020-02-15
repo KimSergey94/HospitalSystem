@@ -22,7 +22,6 @@ namespace DAL.EF
         {
             dbModelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             dbModelBuilder.Entity<Patient>().HasIndex(u => u.IIN).IsUnique();
-            dbModelBuilder.Entity<Patient>().HasRequired(s => s.User).WithMany().WillCascadeOnDelete(false); 
             dbModelBuilder.Entity<Doctor>().HasRequired(s => s.User).WithMany().WillCascadeOnDelete(false); 
         }
     }
@@ -42,10 +41,10 @@ namespace DAL.EF
             db.User.Add(new User { Login = "svetSkor", Password = "svetSkor", RoleId = 1 });
             db.User.Add(new User { Login = "romanLob", Password = "romanLob", RoleId = 1 });
             db.SaveChanges();
-            db.Patient.Add(new Patient { UserId = 1, FirstName = "Евгений", LastName = "Светлаков", IIN = "810708468789", PhoneNumber = "+77765813476", Address = "Карла Маркса 36, кв. 9"}); 
-            db.Patient.Add(new Patient { UserId = 2, FirstName = "Александр", LastName = "Березовский", IIN = "860504666431", PhoneNumber = "+77777777777", Address = "Проспект Мира 33, кв. 6" }); 
-            db.Patient.Add(new Patient { UserId = 3, FirstName = "Алексей", LastName = "Курлов", IIN = "860504666143", PhoneNumber = "+77777777677", Address = "Степной 4, кв. 4" }); 
-            db.Patient.Add(new Patient { UserId = 4, FirstName = "Петр", LastName = "Круглый", IIN = "930203431645", PhoneNumber = "+77777777776", Address = "ул. Лободы 30, кв. 76" });
+            db.Patient.Add(new Patient { FirstName = "Евгений", LastName = "Светлаков", IIN = "810708468789", PhoneNumber = "+77765813476", Address = "Карла Маркса 36, кв. 9"}); 
+            db.Patient.Add(new Patient { FirstName = "Александр", LastName = "Березовский", IIN = "860504666431", PhoneNumber = "+77777777777", Address = "Проспект Мира 33, кв. 6" }); 
+            db.Patient.Add(new Patient { FirstName = "Алексей", LastName = "Курлов", IIN = "860504666143", PhoneNumber = "+77777777677", Address = "Степной 4, кв. 4" }); 
+            db.Patient.Add(new Patient { FirstName = "Петр", LastName = "Круглый", IIN = "930203431645", PhoneNumber = "+77777777776", Address = "ул. Лободы 30, кв. 76" });
             db.Doctor.Add(new Doctor { UserId = 5, FirstName = "Григорий", LastName = "Веселый", PhoneNumber = "+77074548521" });
             db.Doctor.Add(new Doctor { UserId = 6, FirstName = "Светлана", LastName = "Скороходова", PhoneNumber = "+77765532561" });
             db.Doctor.Add(new Doctor { UserId = 7, FirstName = "Роман", LastName = "Лобаненко", PhoneNumber = "+77771584976" });

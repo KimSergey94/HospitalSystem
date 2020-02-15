@@ -39,8 +39,6 @@ namespace WebHospitalSystem.Controllers
                         Session["Role"] = userService.GetUserRole(userDTO);
                         if (user.RoleId == 1 && Session["DoctorId"] != null)
                             Session["DoctorId"] = doctorService.GetDoctors().FirstOrDefault(id => id.UserId == user.UserId).DoctorId;
-                        else if (user.RoleId == 2 && Session["PatientId"] != null)
-                            Session["PatientId"] = patientService.GetPatients().FirstOrDefault(id => id.UserId == user.UserId).PatientId;
                         FormsAuthentication.SetAuthCookie(user.Login, true);
                         return RedirectToAction("Index", "Home");
                     } else {
@@ -54,50 +52,6 @@ namespace WebHospitalSystem.Controllers
                 ModelState.AddModelError("", "Введенный логин или пароль не верны.");
                 return View(user);
             }
-        }
-
-
-        [Authorize(Roles = "Doctor")]
-        public ActionResult RegisterPatient() { return View(); }
-
-        [Authorize(Roles = "Doctor")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult RegisterPatient(RegisterPatientVM model) {
-            if (ModelState.IsValid) {
-                UserDTO user = userService.GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
-                
-                if (user == null) {
-                    model.RoleId = 2;
-                    userService.AddUser(MapToUserDTO(model));
-
-                    // проверяем если пользователь удачно добавлен в бд
-                    var newUser = userService.GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
-                    if (newUser != null) {
-                        try {
-                            if (patientService.isIINAvailable(model.IIN)) {
-                                model.UserId = newUser.UserId;
-                                model.RoleId = newUser.RoleId;
-                                patientService.AddPatient(MapToPatientDTO(model));
-                                Session["Login"] = newUser.Login;
-                                Session["Id"] = newUser.UserId;
-                                Session["Role"] = "Patient";
-                                Session["PatientId"] = patientService.GetPatients().FirstOrDefault(id => id.UserId == newUser.UserId).PatientId;
-                                FormsAuthentication.SetAuthCookie(model.Login, true);
-                                return RedirectToAction("Index", "Home");
-                            }
-                        }
-                        catch {
-                            ModelState.AddModelError("", "Ошибка регистрации пациента");
-                        }
-                    } else {
-                        ModelState.AddModelError("", "Пациент с таким ИИН уже существует");
-                    }
-                } else {
-                    ModelState.AddModelError("", "Пользователь с таким логином уже существует");
-                }
-            }
-            return View(model);
         }
 
         [Authorize(Roles = "Doctor")]
@@ -154,15 +108,6 @@ namespace WebHospitalSystem.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private UserDTO MapToUserDTO(RegisterPatientVM patientVM)
-        {
-            return new MapperConfiguration(cfg => cfg.CreateMap<RegisterPatientVM, UserDTO>()
-                .ForMember(dest => dest.Login, opt => opt.MapFrom(src => src.Login))
-                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-                .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
-                ).CreateMapper().Map<RegisterPatientVM, UserDTO>(patientVM);
-        }
         private UserDTO MapToUserDTO(RegisterDoctorVM doctorVM)
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<RegisterDoctorVM, UserDTO>()
@@ -172,18 +117,7 @@ namespace WebHospitalSystem.Controllers
                 .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
                 ).CreateMapper().Map<RegisterDoctorVM, UserDTO>(doctorVM);
         }
-        private PatientDTO MapToPatientDTO(RegisterPatientVM patientVM)
-        {
-            return new MapperConfiguration(cfg => cfg.CreateMap<RegisterPatientVM, PatientDTO>()
-                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
-                .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
-                .ForMember(dest => dest.IIN, opt => opt.MapFrom(src => src.IIN))
-                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
-                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-                ).CreateMapper().Map<RegisterPatientVM, PatientDTO>(patientVM);
-        }
+      
         private DoctorDTO MapToDoctorDTO(RegisterDoctorVM doctorVM)
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<RegisterDoctorVM, DoctorDTO>()

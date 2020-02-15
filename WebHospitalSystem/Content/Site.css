@@ -26,3 +26,6 @@ textarea {
 .validation-summary-errors, .field-validation-error {
     color: red;
 }
+#gbox_jqGPatients {
+    width: 1279px;
+}

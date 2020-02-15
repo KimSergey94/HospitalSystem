@@ -5,7 +5,6 @@ namespace BLL.Interfaces
 {
     public interface IUserService
     {
-        void RegisterUser(UserDTO userDTO);
         string GetUserRole(UserDTO userDTO);
         IEnumerable<UserDTO> GetUsers();
         void AddUser(UserDTO userDTO);

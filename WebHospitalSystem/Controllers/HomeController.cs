@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebHospitalSystem.Models;
+using System;
 
 namespace WebHospitalSystem.Controllers
 {
@@ -13,21 +14,127 @@ namespace WebHospitalSystem.Controllers
         IPatientService patientService;
         IDoctorService doctorService;
         IAppointmentService appointmentService;
-        IUserService userService;
 
         public HomeController(IPatientService _patientService, IDoctorService _doctorService, 
-                IAppointmentService _appointmentService, IUserService _userService)
+                IAppointmentService _appointmentService)
         {
             patientService = _patientService;
             doctorService = _doctorService;
             appointmentService = _appointmentService;
-            userService = _userService;
         }
-        private List<UserVM> GetUsers()
+
+        [Authorize(Roles = "Doctor")]
+        public ActionResult PatientsList() { return View(); }
+
+        [Authorize(Roles = "Doctor")]
+        public JsonResult GetPatientsJSON(string sidx, string sord, int page, int rows)
         {
-            return new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserVM>()).CreateMapper()
-                .Map<IEnumerable<UserDTO>, List<UserVM>>(userService.GetUsers());
+            int pageIndex = Convert.ToInt32(page) - 1;
+            int pageSize = rows;
+
+            var results = patientService.GetPatients().Select(
+                a => new
+                {
+                    a.PatientId,
+                    a.FirstName,
+                    a.LastName,
+                    a.Patronymic,
+                    a.IIN,
+                    a.PhoneNumber,
+                    a.Address
+                });
+
+            int totalRecords = results.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+
+            if (sord.ToUpper() == "DESC")
+            {
+                results = results.OrderByDescending(s => s.PatientId);
+                results = results.Skip(pageIndex * pageSize).Take(pageSize);
+            }
+            else
+            {
+                results = results.OrderBy(s => s.PatientId);
+                results = results.Skip(pageIndex * pageSize).Take(pageSize);
+            }
+
+            var jsonData = new
+            {
+                total = totalPages,
+                page,
+                records = totalRecords,
+                rows = results
+            };
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpPost]
+        public string CreatePatient([Bind(Exclude="PatientId")] PatientVM patient)
+        {
+            string msg;
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    patientService.AddPatient(MapToPatientDTO(patient));
+                    msg = "Пациент добавлен успешно";
+                }
+                else
+                {
+                    msg = "Пациент не был добавлен. Ошибка валидации модели";
+                }
+            }
+            catch (Exception ex)
+            {
+                msg = "Возникла ошибка: " + ex.Message;
+            }
+            return msg;
+        }
+        
+        [Authorize(Roles = "Doctor")]
+        public string EditPatient(PatientVM patient)
+        {
+            string msg;
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    patientService.EditPatient(MapToPatientDTO(patient));
+                    msg = "Запись пациента успешно редактирована";
+                }
+                else
+                {
+                    msg = "Запись пациента не была редактирована. Ошибка валидации модели";
+                }
+            }
+            catch(Exception ex)
+            {
+                msg = "Возникла ошибка: " + ex.Message;
+            }
+            return msg;
+        }
+        
+        [Authorize(Roles = "Doctor")]
+        public string DeletePatient(long id)
+        {
+            patientService.DeletePatient(id);
+            return "Удаление успешно";
+        }
+
+        private PatientDTO MapToPatientDTO(PatientVM patient)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<PatientVM, PatientDTO>()
+                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => src.PatientId))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
+                .ForMember(dest => dest.IIN, opt => opt.MapFrom(src => src.IIN))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
+                ).CreateMapper().Map<PatientVM, PatientDTO>(patient);
+        }
+
         private List<AppointmentVM> GetAppointments()
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentVM>()).CreateMapper()
@@ -53,17 +160,14 @@ namespace WebHospitalSystem.Controllers
             return View(doctors);
         }
 
-        [Authorize(Roles= "Doctor, Patient")]
+        [Authorize(Roles= "Doctor")]
         public ActionResult ListDoctors() { return View(GetDoctors()); }
 
-        [Authorize(Roles = "Doctor, Patient")]
-        public ActionResult ListUsers() { return View(GetUsers()); }
-
-        [Authorize(Roles = "Doctor, Patient")]
+        [Authorize(Roles = "Doctor")]
         public ActionResult ListPatients() { return View(GetPatients()); }
 
-        [Authorize(Roles = "Doctor, Patient")]
         public ActionResult ListAppointments() { return View(GetAppointments()); }
+
 
     }
 }

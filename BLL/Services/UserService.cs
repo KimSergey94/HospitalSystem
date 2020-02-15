@@ -23,23 +23,7 @@ namespace BLL.Services
             Database.Dispose();
         }
 
-        public void RegisterUser(UserDTO userDTO)
-        {
-            //// применяем скидку
-            //decimal sum = new Discount(0.1m).GetDiscount(orderDto.Price);
-            //Order order = new Order
-            //{
-            //    Date = DateTime.Now,
-            //    UserId = 2,
-            //    Sum = sum,
-            //    Name = orderDto.Name,
-            //    Price = orderDto.Price
-            //}; 
-            //Database.Orders.Create(order); 
-            //Database.Save();
-        }
-
-        string IUserService.GetUserRole(UserDTO userDTO) 
+        public string GetUserRole(UserDTO userDTO) 
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Role, RoleDTO>()).CreateMapper();
             RoleDTO userRole = mapper.Map<Role, RoleDTO>(Database.Roles.Get(userDTO.RoleId));

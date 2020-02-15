@@ -24,8 +24,5 @@ namespace WebHospitalSystem.Models
 
         [Display(Name = "Адрес проживания")]
         public string Address { get; set; }
-
-        [Display(Name = "ID пользователя в системе")]
-        public long UserId { get; set; }
     }
 }
