@@ -4,8 +4,6 @@
 
 @if (Request.IsAuthenticated && login != null && (string)login != "")
 {
-    var id = Session["Id"];
-    var role = Session["Role"];
 
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
@@ -20,6 +18,7 @@
 }
 else
 {
+
     <ul class="nav navbar-nav navbar-right ml-auto">
         <li class="nav-item"><a href="/Account/Login" id="loginLink" class="nav-link">Вход в систему</a></li>
     </ul>

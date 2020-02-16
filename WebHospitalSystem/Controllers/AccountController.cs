@@ -16,6 +16,10 @@ namespace WebHospitalSystem.Controllers
         IUserService userService;
         IPatientService patientService;
         IDoctorService doctorService;
+        static AccountController()
+        {
+            FormsAuthentication.SignOut();
+        }
         public AccountController(IUserService uServ, IPatientService pServ, IDoctorService dServ ) { 
             userService = uServ; 
             patientService = pServ; 
@@ -56,14 +60,11 @@ namespace WebHospitalSystem.Controllers
 
         [Authorize(Roles = "Doctor")]
         public ActionResult RegisterDoctor() { return View(); }
-
         [Authorize(Roles = "Doctor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RegisterDoctor(RegisterDoctorVM model)
-        {
-            if (ModelState.IsValid)
-            {
+        public ActionResult RegisterDoctor(RegisterDoctorVM model) {
+            if (ModelState.IsValid) {
                 UserDTO user = userService.GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
 
                 if (user == null) {
@@ -73,8 +74,7 @@ namespace WebHospitalSystem.Controllers
                     // проверяем если пользователь удачно добавлен в бд
                     var newUser = userService.GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
                     if (newUser != null) {
-                        try
-                        {
+                        try {
                             model.UserId = newUser.UserId;
                             doctorService.AddDoctor(MapToDoctorDTO(model));
                             Session["Login"] = newUser.Login;
@@ -82,15 +82,12 @@ namespace WebHospitalSystem.Controllers
                             Session["Role"] = "Doctor";
                             Session["DoctorId"] = doctorService.GetDoctors().FirstOrDefault(id => id.UserId == newUser.UserId).DoctorId;
                             FormsAuthentication.SetAuthCookie(model.Login, true);
-                            return RedirectToAction("Index", "Home");
-                        }
-                        catch (Exception ex)
-                        {
+                            return RedirectToAction("ListDoctors", "Home");
+                        } catch (Exception ex) {
                             ModelState.AddModelError("", "Ошибка регистрации врача: " + ex.Message);
                         }
                     }
-                }
-                else {
+                } else {
                     ModelState.AddModelError("", "Пользователь с таким логином уже существует");
                 }
             }
@@ -101,14 +98,13 @@ namespace WebHospitalSystem.Controllers
         {
             Session["Login"] = null;
             Session["Id"] = null;
-            Session["Role"] = null;
             Session["DoctorId"] = null;
+            Session["Role"] = null;
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
 
-        private UserDTO MapToUserDTO(RegisterDoctorVM doctorVM)
-        {
+        private UserDTO MapToUserDTO(RegisterDoctorVM doctorVM) {
             return new MapperConfiguration(cfg => cfg.CreateMap<RegisterDoctorVM, UserDTO>()
                 .ForMember(dest => dest.Login, opt => opt.MapFrom(src => src.Login))
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
@@ -116,9 +112,7 @@ namespace WebHospitalSystem.Controllers
                 .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
                 ).CreateMapper().Map<RegisterDoctorVM, UserDTO>(doctorVM);
         }
-      
-        private DoctorDTO MapToDoctorDTO(RegisterDoctorVM doctorVM)
-        {
+        private DoctorDTO MapToDoctorDTO(RegisterDoctorVM doctorVM) {
             return new MapperConfiguration(cfg => cfg.CreateMap<RegisterDoctorVM, DoctorDTO>()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))

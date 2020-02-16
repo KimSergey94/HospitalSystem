@@ -23,7 +23,6 @@ namespace BLL.Services
              .Map<PatientDTO, Patient>(patientDTO);
         }
         
-
         public void AddPatient(PatientDTO patientDTO)
         {
             Database.Patients.Create(MapToPatient(patientDTO));

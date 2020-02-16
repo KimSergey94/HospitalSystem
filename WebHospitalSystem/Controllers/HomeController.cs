@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web.Mvc;
 using WebHospitalSystem.Models;
 using System;
+using System.Web.Security;
+using WebHospitalSystem.Utils;
 
 namespace WebHospitalSystem.Controllers
 {
@@ -14,8 +16,11 @@ namespace WebHospitalSystem.Controllers
         IPatientService patientService;
         IDoctorService doctorService;
         IAppointmentService appointmentService;
-
-        public HomeController(IPatientService _patientService, IDoctorService _doctorService, 
+        static HomeController()
+        {
+            FormsAuthentication.SignOut();
+        }
+        public HomeController(IPatientService _patientService, IDoctorService _doctorService,
                 IAppointmentService _appointmentService)
         {
             patientService = _patientService;
@@ -25,7 +30,6 @@ namespace WebHospitalSystem.Controllers
 
         [Authorize(Roles = "Doctor")]
         public ActionResult PatientsList() { return View(); }
-
         [Authorize(Roles = "Doctor")]
         public JsonResult GetPatientsJSON(string sidx, string sord, int page, int rows, string iin, string firstName, string lastName, string patronymic)
         {
@@ -48,17 +52,18 @@ namespace WebHospitalSystem.Controllers
             {
                 results = results.Where(p => p.IIN.Contains(iin));
             }
-            if (!string.IsNullOrEmpty(firstName))
+            else if (!string.IsNullOrEmpty(firstName))
             {
                 results = results.Where(p => p.FirstName.Contains(firstName));
             }
-            if (!string.IsNullOrEmpty(lastName))
+            else if (!string.IsNullOrEmpty(lastName))
             {
                 results = results.Where(p => p.LastName.Contains(lastName));
             }
-            if (!string.IsNullOrEmpty(patronymic))
+            else if (!string.IsNullOrEmpty(patronymic))
             {
-                results = results.SelectMany(x => x.Patronymic).Where(p => p.Patronymic.)).Contains(patronymic));
+                results = results.Where(notnull => notnull.Patronymic != null);
+                results = results.Where(patron => patron.Patronymic.Contains(patronymic));
             }
 
             int totalRecords = results.Count();
@@ -94,7 +99,7 @@ namespace WebHospitalSystem.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    patientService.AddPatient(MapToPatientDTO(patient));
+                    patientService.AddPatient(MapperUtil.MapToPatientDTO(patient));
                     msg = "Пациент добавлен успешно";
                 }
                 else
@@ -117,7 +122,7 @@ namespace WebHospitalSystem.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    patientService.EditPatient(MapToPatientDTO(patient));
+                    patientService.EditPatient(MapperUtil.MapToPatientDTO(patient));
                     msg = "Запись пациента успешно редактирована";
                 }
                 else
@@ -163,20 +168,18 @@ namespace WebHospitalSystem.Controllers
             Session["searchBy"] = "patronymic";
             return View("PatientsList");
         }
-
-        private PatientDTO MapToPatientDTO(PatientVM patient)
-        {
-            return new MapperConfiguration(cfg => cfg.CreateMap<PatientVM, PatientDTO>()
-                .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => src.PatientId))
-                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
-                .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
-                .ForMember(dest => dest.IIN, opt => opt.MapFrom(src => src.IIN))
-                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
-                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
-                ).CreateMapper().Map<PatientVM, PatientDTO>(patient);
-        }
-
+        //private PatientDTO MapToPatientDTO(PatientVM patient)
+        //{
+        //    return new MapperConfiguration(cfg => cfg.CreateMap<PatientVM, PatientDTO>()
+        //        .ForMember(dest => dest.PatientId, opt => opt.MapFrom(src => src.PatientId))
+        //        .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+        //        .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+        //        .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
+        //        .ForMember(dest => dest.IIN, opt => opt.MapFrom(src => src.IIN))
+        //        .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+        //        .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
+        //        ).CreateMapper().Map<PatientVM, PatientDTO>(patient);
+        //}
         private List<AppointmentVM> GetAppointments()
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentVM>()).CreateMapper()
@@ -187,7 +190,6 @@ namespace WebHospitalSystem.Controllers
             return new MapperConfiguration(cfg => cfg.CreateMap<DoctorDTO, DoctorVM>()).CreateMapper()
                 .Map<IEnumerable<DoctorDTO>, List<DoctorVM>>(doctorService.GetDoctors());
         }
-
         //      CHANGE LATER 
         public ActionResult Index()
         {
@@ -196,12 +198,71 @@ namespace WebHospitalSystem.Controllers
             var doctors = mapper.Map<IEnumerable<DoctorDTO>, List<DoctorVM>>(doctorDTOs); 
             return View(doctors);
         }
-
-        [Authorize(Roles= "Doctor")]
         public ActionResult ListDoctors() { return View(GetDoctors()); }
 
+        [Authorize(Roles = "Doctor")]
+        public ActionResult EditDoctor(int id)
+        {
+            return View(MapperUtil.MapToDoctorVM(doctorService.GetDoctors().FirstOrDefault(doctorID => doctorID.DoctorId == id)));
+        }
+        [Authorize(Roles = "Doctor")]
+        [HttpPost]
+        public ActionResult EditDoctor(DoctorVM doctorVM)
+        {
+            var doctor = doctorService.GetDoctors().FirstOrDefault(doctorID => doctorID.DoctorId == doctorVM.DoctorId);
+            doctor.FirstName = doctorVM.FirstName;
+            doctor.LastName = doctorVM.LastName;
+            doctor.Patronymic = doctorVM.Patronymic;
+            doctor.PhoneNumber = doctorVM.PhoneNumber;
+            doctorService.EditDoctor(doctor);
+            return RedirectToAction("ListDoctors", "Home");
+        }
+
+        [Authorize(Roles = "Doctor")]
+        public ActionResult DeleteDoctor(int id)
+        {
+            DoctorDTO doctor = doctorService.GetDoctors().FirstOrDefault(doctorId => doctorId.DoctorId == id);
+            if (doctor != null)
+            {
+                return View(MapperUtil.MapToDoctorVM(doctor));
+            }
+            else
+            {
+                ViewBag.Title = "Ошибка удаления врача.";
+                ViewBag.Message = "Не удалось найти врача для удаления с идентификационным номером = " + id;
+                return View("Error");
+            }
+        }
+        [Authorize(Roles = "Doctor")]
+        [HttpPost]
+        public ActionResult DeleteDoctor(DoctorVM doctorVM)
+        {
+            try
+            {
+                doctorService.DeleteDoctor(doctorVM.DoctorId);
+                return RedirectToAction("ListDoctors", "Home");
+            }
+            catch
+            {
+                ViewBag.Title = "Ошибка удаления врача.";
+                ViewBag.Message = "Не удалось удалить врача с идентификационным номером = " + doctorVM.DoctorId;
+                return View("Error");
+            }
+        }
+
+        //private DoctorVM MapToDoctorVM(DoctorDTO doctorDTO)
+        //{
+        //    return new MapperConfiguration(cfg => cfg.CreateMap<DoctorDTO, DoctorVM>()
+        //        .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+        //        .ForMember(dest => dest.DoctorId, opt => opt.MapFrom(src => src.DoctorId))
+        //        .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+        //        .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+        //        .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
+        //        .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+        //        ).CreateMapper().Map<DoctorDTO, DoctorVM>(doctorDTO);
+        //}
+
+        [Authorize(Roles = "Doctor")]
         public ActionResult ListAppointments() { return View(GetAppointments()); }
-
-
     }
 }
