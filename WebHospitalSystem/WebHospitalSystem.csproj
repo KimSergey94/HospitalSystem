@@ -424,7 +424,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\ListDoctors.cshtml" />
-    <Content Include="Views\Home\ListAppointments.cshtml" />
+    <Content Include="Views\Appointment\ListAppointments.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Home\PatientsList.cshtml" />
     <Content Include="Views\Shared\_navBar.cshtml" />

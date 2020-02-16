@@ -19,7 +19,7 @@
                     @if (Request.IsAuthenticated && Session["Role"] != null && Session["Role"].ToString().Equals("Doctor"))
                     {
                         <li class="nav-item"><a href="/Home/PatientsList" class="nav-link">Пациенты</a></li>
-                        <li class="nav-item"><a href="/Home/ListAppointments" class="nav-link">Прием пациентов</a></li>
+                        <li class="nav-item"><a href="/Appointment/ListAppointments" class="nav-link">Прием пациентов</a></li>
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Найти пациента</a>
                             <div class="dropdown-menu">

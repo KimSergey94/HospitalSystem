@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using BLL.DTO;
+﻿using BLL.DTO;
 using BLL.Interfaces;
+using BLL.Util;
 using DAL.Entities;
 using DAL.Interfaces;
 using System.Collections.Generic;
@@ -19,14 +19,14 @@ namespace BLL.Services
 
         public void AddDoctor(DoctorDTO doctorDTO)
         {
-            Database.Doctors.Create(MapToDoctor(doctorDTO));
+            Database.Doctors.Create(MapperUtil.MapToDoctor(doctorDTO));
             Database.Save();
         }
         public void EditDoctor(DoctorDTO doctorDTO)
         {
             Doctor doctor = Database.Doctors.Find(x => x.DoctorId == doctorDTO.DoctorId).FirstOrDefault();
             if (doctor != null) {
-                doctor = updateFields(doctor, doctorDTO);
+                doctor = MapperUtil.UpdateDoctorFieldsFromDTO(doctor, doctorDTO);
                 Database.Doctors.Update(doctor);
                 Database.Save();
             }
@@ -39,23 +39,9 @@ namespace BLL.Services
 
         public IEnumerable<DoctorDTO> GetDoctors()
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Doctor, DoctorDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<Doctor>, List<DoctorDTO>>(Database.Doctors.GetAll());
+            return MapperUtil.MapToDoctorDTOList(Database.Doctors.GetAll());
         }
 
-        Doctor MapToDoctor(DoctorDTO doctorDTO)
-        {
-            return new MapperConfiguration(cfg => cfg.CreateMap<DoctorDTO, Doctor>()).CreateMapper()
-             .Map<DoctorDTO, Doctor>(doctorDTO);
-        }
-        Doctor updateFields(Doctor doctor, DoctorDTO doctorDTO)
-        {
-            doctor.FirstName = doctorDTO.FirstName;
-            doctor.LastName = doctorDTO.LastName;
-            doctor.Patronymic = doctorDTO.Patronymic;
-            doctor.PhoneNumber = doctorDTO.PhoneNumber;
-            return doctor;
-        }
         public void Dispose()
         {
             Database.Dispose();

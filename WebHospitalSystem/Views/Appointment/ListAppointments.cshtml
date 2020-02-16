@@ -1,0 +1,25 @@
+﻿@model IEnumerable<WebHospitalSystem.Models.AppointmentVM>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Прием пациентов</h2>
+<hr />
+
+<p>
+    <input type="button" value="Записаться на прием к врачу" />
+</p>
+
+@{
+    WebGrid webGrid = new WebGrid(source: Model);
+    @webGrid.GetHtml(
+        tableStyle: "table",
+        columns: new[]{
+            webGrid.Column("AppointmentId", "ID приема"),
+            webGrid.Column("DoctorName", "ФИО врача"),
+            webGrid.Column("PatientName", "ФИО пациента"),
+            webGrid.Column("Diagnosis", "Диагноз")
+        }
+    )
+}

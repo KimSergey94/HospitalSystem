@@ -15,28 +15,28 @@
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.FirstName)
-            <input type="text" class="form-control" placeholder="Имя">
+            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new {placeholder = "Имя", @class="form-control"} })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.LastName)
-            <input type="text" class="form-control" placeholder="Фамилия">
+            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new {placeholder = "Фамилия", @class="form-control"} })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.Patronymic)
-            <input type="text" class="form-control" placeholder="Отчество">
+            @Html.EditorFor(model => model.Patronymic, new { htmlAttributes = new {placeholder = "Отчество", @class="form-control"} })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.PhoneNumber)
-            <input type="text" class="form-control" placeholder="Телефонный номер">
+            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new {placeholder = "Телефонный номер", @class="form-control"} })
         </div>
     </div>
     <br />
@@ -44,21 +44,21 @@
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.Login)
-            <input type="text" class="form-control" placeholder="Логин">
+            @Html.EditorFor(model => model.Login, new { htmlAttributes = new {placeholder = "Логин", @class="form-control"} })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.Password)
-            <input type="text" class="form-control" placeholder="Введите пароль">
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new {placeholder = "Введите пароль", @class="form-control"} })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.ConfirmPassword)
-            <input type="text" class="form-control" placeholder="Подтвердите пароль">
+            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new {placeholder = "Подтвердите пароль", @class="form-control"} })
         </div>
     </div>
     <br />

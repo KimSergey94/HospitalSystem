@@ -4,7 +4,9 @@
     ViewBag.Title = "Редактирование записи врача";
 }
 
+<br />
 <h2>Редактирование записи врача</h2>
+<br />
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -42,10 +44,10 @@
                 @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <br />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Сохранить изменения" class="btn btn-default" />
+                <input type="submit" value="Сохранить изменения" class="btn btn-dark" />
             </div>
         </div>
     </div>

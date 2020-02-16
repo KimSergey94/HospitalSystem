@@ -1,6 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using System.Web.Security;
 using BLL.Interfaces;
+using WebHospitalSystem.Models;
+using WebHospitalSystem.Utils;
 
 namespace WebHospitalSystem.Controllers
 {
@@ -21,10 +24,11 @@ namespace WebHospitalSystem.Controllers
             appointmentService = _appointmentService;
         }
 
-        // GET: Appointment
-        public ActionResult Index()
+        [Authorize(Roles = "Doctor")]
+        public ActionResult ListAppointments() { return View(GetAppointments()); }
+        private List<AppointmentVM> GetAppointments()
         {
-            return View(appointmentService.GetAppointments());
+            return MapperUtil.MapToAppointmentVMList(appointmentService.GetAppointments());
         }
 
         [HttpGet]
@@ -33,11 +37,21 @@ namespace WebHospitalSystem.Controllers
             return PartialView("_CreateAppointment", new Models.AppointmentVM());
         }
         [HttpPost]
-        public JsonResult CreateAppointment(AppointmenVM appointmentVM)
+        public JsonResult CreateAppointment(AppointmentVM appointmentVM)
         {
 
             appointmentService.AddAppointment();
         }
-        private
+
+
+
+
+        protected override void Dispose(bool disposing)
+        {
+            appointmentService.Dispose();
+            patientService.Dispose();
+            doctorService.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

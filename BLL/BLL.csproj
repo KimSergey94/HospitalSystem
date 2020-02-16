@@ -65,6 +65,7 @@
     <Compile Include="Services\DoctorService.cs" />
     <Compile Include="Services\PatientService.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Util\MapperUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
