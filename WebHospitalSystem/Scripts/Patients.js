@@ -1,4 +1,4 @@
-﻿$(function(){
+﻿$(function () {
     $("#jqGPatients").jqGrid({
         url: "/home/GetPatientsJSON",
         datatype: "json",
@@ -16,6 +16,7 @@
             { key: false, name: 'Address', index: 'Address', width: 210, align: "center", editable: true, sortable: true }
         ],
         multiselect: false,
+        loadonce: false,
         caption: "Список Пациентов",
         pager: jQuery('#jqGridPager'),
         rowNum: 15,
@@ -32,14 +33,14 @@
         }
     }).navGrid('#jqGridPager', {
         edit: true, edittext: "Изменить", add: true, addtext: "Добавить",
-        del: true, deltext: "Удалить", search: true, searchtext: "Поиск", refresh: true
+        del: true, deltext: "Удалить", search: false, searchtext: "Поиск", refresh: true
     },
         {
             //edit options
             zIndex: 100,
             url: '/Home/EditPatient',
-            closeOnEscape: true,
             closeAfterEdit: true,
+            closeOnEscape: true,
             recreateForm: true,
             afterComplete: function (response) {
                 if (response.responseText) {
@@ -51,8 +52,8 @@
             //add options
             zIndex: 100,
             url: '/Home/CreatePatient',
+            closeAfterAdd: true,
             closeOnEscape: true,
-            closeAfterEdit: true,
             afterComplete: function (response) {
                 if (response.responseText) {
                     alert(response.responseText);
@@ -73,4 +74,16 @@
                 }
             }
         });
+    $('#filterButton').click(function (event){
+        event.preventDefault();
+        filterGrid();
+    });
 });
+
+function filterGrid() {
+    var postDataValues = $('#jqGPatients').jqGrid('getGridParam', 'postData');
+    $('.filterItem').each(function (index, item) {
+        postDataValues[$(item).attr('id')] = $(item).val();
+    });
+    $('#jqGPatients').jqGrid().setGridParam({ postData: postDataValues, page: 1 }).trigger('reloadGrid');
+}

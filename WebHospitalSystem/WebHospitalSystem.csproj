@@ -409,7 +409,6 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\RegisterPatient.cshtml" />
     <Content Include="Views\Account\RegisterDoctor.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
@@ -422,7 +421,6 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Home\ListPatients.cshtml" />
     <Content Include="Views\Home\ListDoctors.cshtml" />
     <Content Include="Views\Home\ListAppointments.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />

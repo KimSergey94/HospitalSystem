@@ -1,4 +1,6 @@
-﻿@{
+﻿@model WebHospitalSystem.Models.PatientVM
+
+@{
     Layout = null;
 }
 <!DOCTYPE html>
@@ -23,11 +25,83 @@
             top: 40% !important;
             left:40% !important;
         }
+        #searchmodfbox_jqGPatients{
+            top: 40% !important;
+            left:40% !important;
+        }
     </style>
 </head>
 <body>
     @Html.Partial("_navBar")
     <h2>Список пациентов</h2>
+
+    <div id="parent">
+        @if (Session["searchBy"] != null && Session["searchBy"].Equals("iin"))
+        {
+            <div id="parent">
+                <div class="row" style="padding-left: 16px; padding-top: 42px; margin-bottom: -39px;">
+                    <div class="col-xs-6">
+                        <div>
+                            @Html.TextBoxFor(model => model.IIN, new { @class = "filterItem" })
+                            @Html.ValidationMessageFor(model => model.IIN)
+                        </div>
+                    </div>
+                    <div class="col-xs-6"><input type="button" id="filterButton" name="search" value="Поиск по ИИН" /></div>
+                </div>
+            </div>
+            <br />
+            <br />
+        }
+        else if (Session["searchBy"] != null && Session["searchBy"].Equals("firstName"))
+        {
+            <div id="parent">
+                <div class="row" style="padding-left: 16px; padding-top: 42px; margin-bottom: -39px;">
+                    <div class="col-xs-6">
+                        <div>
+                            @Html.TextBoxFor(model => model.FirstName, new { @class = "filterItem" })
+                            @Html.ValidationMessageFor(model => model.FirstName)
+                        </div>
+                    </div>
+                    <div class="col-xs-6"><input type="button" id="filterButton" name="search" value="Поиск по имени" /></div>
+                </div>
+            </div>
+            <br />
+            <br />
+        }
+        else if (Session["searchBy"] != null && Session["searchBy"].Equals("lastName"))
+        {
+            <div id="parent">
+                <div class="row" style="padding-left: 16px; padding-top: 42px; margin-bottom: -39px;">
+                    <div class="col-xs-6">
+                        <div>
+                            @Html.TextBoxFor(model => model.LastName, new { @class = "filterItem" })
+                            @Html.ValidationMessageFor(model => model.LastName)
+                        </div>
+                    </div>
+                    <div class="col-xs-6"><input type="button" id="filterButton" name="search" value="Поиск по фамилии" /></div>
+                </div>
+            </div>
+            <br />
+            <br />
+        }
+        else if (Session["searchBy"] != null && Session["searchBy"].Equals("patronymic"))
+        {
+            <div id="parent">
+                <div class="row" style="padding-left: 16px; padding-top: 42px; margin-bottom: -39px;">
+                    <div class="col-xs-6">
+                        <div>
+                            @Html.TextBoxFor(model => model.Patronymic, new { @class = "filterItem" })
+                            @Html.ValidationMessageFor(model => model.Patronymic)
+                        </div>
+                    </div>
+                    <div class="col-xs-6"><input type="button" id="filterButton" name="search" value="Поиск по отчеству" /></div>
+                </div>
+            </div>
+            <br />
+            <br />
+        }
+    </div>
+
     <table id="jqGPatients"></table>
     <div id="jqGridPager" style="height:27px"></div>
     @Scripts.Render("~/bundles/bootstrap")

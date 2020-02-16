@@ -45,7 +45,7 @@ namespace WebHospitalSystem.Controllers
                         ModelState.AddModelError("", "Пользователь с таким логином не существует.");
                     }
                 } catch (ValidationException ex) {
-                    Debug.WriteLine("Возникло исключение (Пользователь с введенным логином не найден): " + ex.Message);
+                    Debug.WriteLine("Возникла ошибка (Пользователь с введенным логином не найден): " + ex.Message);
                 }
                 return View(user);
             } else {
@@ -86,7 +86,7 @@ namespace WebHospitalSystem.Controllers
                         }
                         catch (Exception ex)
                         {
-                            ModelState.AddModelError("", "Ошибка регистрации врача");
+                            ModelState.AddModelError("", "Ошибка регистрации врача: " + ex.Message);
                         }
                     }
                 }
@@ -103,7 +103,6 @@ namespace WebHospitalSystem.Controllers
             Session["Id"] = null;
             Session["Role"] = null;
             Session["DoctorId"] = null;
-            Session["PatientId"] = null;
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }

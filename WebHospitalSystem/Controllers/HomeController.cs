@@ -27,7 +27,7 @@ namespace WebHospitalSystem.Controllers
         public ActionResult PatientsList() { return View(); }
 
         [Authorize(Roles = "Doctor")]
-        public JsonResult GetPatientsJSON(string sidx, string sord, int page, int rows)
+        public JsonResult GetPatientsJSON(string sidx, string sord, int page, int rows, string iin, string firstName, string lastName, string patronymic)
         {
             int pageIndex = Convert.ToInt32(page) - 1;
             int pageSize = rows;
@@ -43,6 +43,23 @@ namespace WebHospitalSystem.Controllers
                     a.PhoneNumber,
                     a.Address
                 });
+
+            if (!string.IsNullOrEmpty(iin))
+            {
+                results = results.Where(p => p.IIN.Contains(iin));
+            }
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                results = results.Where(p => p.FirstName.Contains(firstName));
+            }
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                results = results.Where(p => p.LastName.Contains(lastName));
+            }
+            if (!string.IsNullOrEmpty(patronymic))
+            {
+                results = results.SelectMany(x => x.Patronymic).Where(p => p.Patronymic.)).Contains(patronymic));
+            }
 
             int totalRecords = results.Count();
             var totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
@@ -122,6 +139,31 @@ namespace WebHospitalSystem.Controllers
             return "Удаление успешно";
         }
 
+        [Authorize(Roles = "Doctor")]
+        public ActionResult FindPatientByIIN() 
+        {
+            Session["searchBy"] = "iin";
+            return View("PatientsList"); 
+        }
+        [Authorize(Roles = "Doctor")]
+        public ActionResult FindPatientByFirstName()
+        {
+            Session["searchBy"] = "firstName";
+            return View("PatientsList");
+        }
+        [Authorize(Roles = "Doctor")]
+        public ActionResult FindPatientByLastName()
+        {
+            Session["searchBy"] = "lastName";
+            return View("PatientsList");
+        }
+        [Authorize(Roles = "Doctor")]
+        public ActionResult FindPatientByPatronymic()
+        {
+            Session["searchBy"] = "patronymic";
+            return View("PatientsList");
+        }
+
         private PatientDTO MapToPatientDTO(PatientVM patient)
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<PatientVM, PatientDTO>()
@@ -140,11 +182,6 @@ namespace WebHospitalSystem.Controllers
             return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentVM>()).CreateMapper()
                 .Map<IEnumerable<AppointmentDTO>, List<AppointmentVM>>(appointmentService.GetAppointments());
         }
-        private List<PatientVM> GetPatients()
-        {
-            return new MapperConfiguration(cfg => cfg.CreateMap<PatientDTO, PatientVM>()).CreateMapper()
-                .Map<IEnumerable<PatientDTO>, List<PatientVM>>(patientService.GetPatients());
-        }
         private List<DoctorVM> GetDoctors()
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<DoctorDTO, DoctorVM>()).CreateMapper()
@@ -162,9 +199,6 @@ namespace WebHospitalSystem.Controllers
 
         [Authorize(Roles= "Doctor")]
         public ActionResult ListDoctors() { return View(GetDoctors()); }
-
-        [Authorize(Roles = "Doctor")]
-        public ActionResult ListPatients() { return View(GetPatients()); }
 
         public ActionResult ListAppointments() { return View(GetAppointments()); }
 
