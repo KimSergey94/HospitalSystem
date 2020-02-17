@@ -22,6 +22,10 @@ namespace WebHospitalSystem.Models
         [Display(Name = "Телефонный номер")]
         public string PhoneNumber { get; set; }
 
+        [Required(ErrorMessage = "Введите специальность")]
+        [Display(Name = "Специальность")] 
+        public string Speciality { get; set; }
+
         [Required(ErrorMessage = "Введите логин для входа в систему")]
         [Display(Name = "Логин для входа в систему")]
         public string Login { get; set; }

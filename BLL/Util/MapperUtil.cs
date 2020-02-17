@@ -34,6 +34,7 @@ namespace BLL.Util
             doctor.LastName = doctorDTO.LastName;
             doctor.Patronymic = doctorDTO.Patronymic;
             doctor.PhoneNumber = doctorDTO.PhoneNumber;
+            doctor.Speciality = doctorDTO.Speciality;
             return doctor;
         }
 
@@ -95,6 +96,12 @@ namespace BLL.Util
             appointment.PatientId = appointmentDTO.PatientId;
             appointment.Diagnosis = appointmentDTO.Diagnosis;
             return appointment;
+        }
+        public static AppointmentRecord UpdateAppointmentRecordFieldsFromDTO(AppointmentRecord appointmentRecord, AppointmentRecordDTO appointmentRecordDTO)
+        {
+            appointmentRecord.Symptom = appointmentRecordDTO.Symptom;
+            appointmentRecord.Date = appointmentRecordDTO.Date;
+            return appointmentRecord;
         }
 
         public static AppointmentRecord MapToAppointmentRecord(AppointmentRecordDTO appointmentRecordDTO)

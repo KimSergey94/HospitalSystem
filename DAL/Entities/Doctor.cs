@@ -6,10 +6,12 @@ namespace DAL.Entities
     {
         public int DoctorId { get; set; }
 
-        
-        [DataType("NVARCHAR"), MaxLength(255)] 
+
+        [DataType("NVARCHAR"), MaxLength(255)]
         public string FirstName { get; set; }
 
+        [DataType("NVARCHAR"), MaxLength(255)]
+        public string Speciality{ get; set; }
 
         [DataType("NVARCHAR"), MaxLength(255)] 
         public string LastName { get; set; }

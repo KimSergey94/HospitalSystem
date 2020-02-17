@@ -7,8 +7,9 @@ namespace BLL.Interfaces
     {
         void AddAppointment(AppointmentDTO appointmentDTO);
         void EditAppointment(AppointmentDTO appointmentDTO);
-        void DeleteAppointment(AppointmentDTO appointmentDTO);
-        void CommitChanges();
+        void EditAppointmentRecord(AppointmentRecordDTO appointmentDTO);
+        void DeleteAppointment(long appointmentId);
+        void DeleteAppointmentRecord(long appointmentRecordId);
 
         void AddAppointmentRecord(AppointmentRecordDTO appointmentRecordDTO);
         string GetDoctorName(int id);
@@ -18,7 +19,8 @@ namespace BLL.Interfaces
 
 
         IEnumerable<AppointmentDTO> GetAppointments();
-        IEnumerable<AppointmentRecordDTO> GetAppointmentsRecords();
+        IEnumerable<AppointmentRecordDTO> GetAppointmentRecords();
+        IEnumerable<AppointmentRecordDTO> GetAppointmentRecordsByAppointment(long appointmentId);
         void Dispose();
     }
 }

@@ -435,6 +435,11 @@
     <Content Include="Views\Appointment\_EditAppointment.cshtml" />
     <Content Include="Views\Shared\temp.cshtml" />
     <Content Include="Views\Shared\temp2.cshtml" />
+    <Content Include="Views\Shared\_LayoutWithoutBundles.cshtml" />
+    <Content Include="Views\Appointment\_AddAppointmentRecord.cshtml" />
+    <Content Include="Views\Appointment\_ListAppointmentRecords.cshtml" />
+    <Content Include="Views\Shared\temp3.cshtml" />
+    <Content Include="Views\Appointment\_EditAppointmentRecord.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

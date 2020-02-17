@@ -21,8 +21,9 @@ namespace DAL.EF
         protected override void OnModelCreating(DbModelBuilder dbModelBuilder)
         {
             dbModelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            dbModelBuilder.Entity<Patient>().HasIndex(u => u.IIN).IsUnique();
-            dbModelBuilder.Entity<Doctor>().HasRequired(s => s.User).WithMany().WillCascadeOnDelete(false); 
+            dbModelBuilder.Entity<Patient>().HasIndex(i => i.IIN).IsUnique();
+            dbModelBuilder.Entity<Doctor>().HasRequired(u => u.User).WithMany().WillCascadeOnDelete(false);
+            dbModelBuilder.Entity<AppointmentRecord>().Property(d => d.Date).HasColumnType("datetime2");
         }
     }
 
@@ -45,9 +46,9 @@ namespace DAL.EF
             db.Patient.Add(new Patient { FirstName = "Александр", LastName = "Березовский", IIN = "860504666431", PhoneNumber = "+77777777777", Address = "Проспект Мира 33, кв. 6" }); 
             db.Patient.Add(new Patient { FirstName = "Алексей", LastName = "Курлов", IIN = "860504666143", PhoneNumber = "+77777777677", Address = "Степной 4, кв. 4" }); 
             db.Patient.Add(new Patient { FirstName = "Петр", LastName = "Круглый", IIN = "930203431645", PhoneNumber = "+77777777776", Address = "ул. Лободы 30, кв. 76" });
-            db.Doctor.Add(new Doctor { UserId = 5, FirstName = "Григорий", LastName = "Веселый", PhoneNumber = "+77074548521" });
-            db.Doctor.Add(new Doctor { UserId = 6, FirstName = "Светлана", LastName = "Скороходова", PhoneNumber = "+77765532561" });
-            db.Doctor.Add(new Doctor { UserId = 7, FirstName = "Роман", LastName = "Лобаненко", PhoneNumber = "+77771584976" });
+            db.Doctor.Add(new Doctor { Speciality = "Психотерапевт", UserId = 5, FirstName = "Григорий", LastName = "Веселый", Patronymic = "Александрович", PhoneNumber = "+77074548521" });
+            db.Doctor.Add(new Doctor { Speciality = "Терапевт", UserId = 6, FirstName = "Светлана", LastName = "Скороходова", Patronymic = "Алексеевич", PhoneNumber = "+77765532561" });
+            db.Doctor.Add(new Doctor { Speciality = "Терапевт", UserId = 7, FirstName = "Роман", LastName = "Лобаненко", Patronymic = "Михайлович", PhoneNumber = "+77771584976" });
             db.SaveChanges();
             db.Appointment.Add(new Appointment { DoctorId = 1, PatientId = 1, Diagnosis = "Шизофрения" });
             db.Appointment.Add(new Appointment { DoctorId = 2, PatientId = 2, Diagnosis = "Простуда" });

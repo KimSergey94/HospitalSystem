@@ -18,7 +18,10 @@ namespace WebHospitalSystem.Models
         
         [Display(Name = "Телефонный номер")]
         public string PhoneNumber { get; set; }
-        
+
+        [Display(Name = "Специальность")]
+        public string Speciality { get; set; }
+
         [Display(Name = "ID пользователя в системе")]
         public long UserId { get; set; }
 
@@ -26,7 +29,7 @@ namespace WebHospitalSystem.Models
         {
             get
             {
-                return string.Format("{0} {1} {2}", LastName, FirstName, Patronymic);
+                return string.Format("{0} {1} {2} ({3})", LastName, FirstName, Patronymic, Speciality);
             }
         }
     }

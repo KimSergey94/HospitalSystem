@@ -34,6 +34,7 @@ namespace WebHospitalSystem.Utils
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.Speciality, opt => opt.MapFrom(src => src.Speciality))
                 ).CreateMapper().Map<DoctorDTO, DoctorVM>(doctorDTO);
         }
 
@@ -58,6 +59,7 @@ namespace WebHospitalSystem.Utils
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.Patronymic, opt => opt.MapFrom(src => src.Patronymic))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.Speciality, opt => opt.MapFrom(src => src.Speciality))
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
                 ).CreateMapper().Map<RegisterDoctorVM, DoctorDTO>(doctorVM);
         }
@@ -67,6 +69,12 @@ namespace WebHospitalSystem.Utils
             return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentVM>()).CreateMapper()
                 .Map<IEnumerable<AppointmentDTO>, List<AppointmentVM>>(appointmentDTOs);
         }
+        public static List<AppointmentRecordVM> MapToAppointmentRecordVMList(IEnumerable<AppointmentRecordDTO> appointmentRecordDTOs)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentRecordDTO, AppointmentRecordVM>()).CreateMapper()
+                .Map<IEnumerable<AppointmentRecordDTO>, List<AppointmentRecordVM>>(appointmentRecordDTOs);
+        }
+        
         public static List<DoctorVM> MapToDoctorVMList(IEnumerable<DoctorDTO> doctorDTOs)
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<DoctorDTO, DoctorVM>()).CreateMapper()
@@ -78,15 +86,21 @@ namespace WebHospitalSystem.Utils
             return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentVM, AppointmentDTO>()).CreateMapper()
                 .Map<AppointmentVM, AppointmentDTO>(appointmentVM);
         }
+        public static AppointmentRecordDTO MapToAppointmentRecordDTO(AppointmentRecordVM appointmentRecordVM)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentRecordVM, AppointmentRecordDTO>()).CreateMapper()
+                .Map<AppointmentRecordVM, AppointmentRecordDTO>(appointmentRecordVM);
+        }
+        
         public static AppointmentVM MapToAppointmentVM(AppointmentDTO appointmentDTO)
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentVM>()).CreateMapper()
                 .Map<AppointmentDTO, AppointmentVM>(appointmentDTO);
         }
-        public static AppointmentRecordDTO MapToAppointmentRecordDTO(AppointmentRecordVM appointmentRecordVM)
+        public static AppointmentRecordVM MapToAppointmentRecordVM(AppointmentDTO appointmentRecordDTO)
         {
-            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentRecordVM, AppointmentRecordDTO>()).CreateMapper()
-                .Map<AppointmentRecordVM, AppointmentRecordDTO>(appointmentRecordVM);
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentRecordVM>()).CreateMapper()
+                .Map<AppointmentDTO, AppointmentRecordVM>(appointmentRecordDTO);
         }
 
 

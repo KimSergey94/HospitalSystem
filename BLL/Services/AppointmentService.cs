@@ -25,7 +25,6 @@ namespace BLL.Services
                 Database.Save();
             }
         }
-
         public void AddAppointmentRecord(AppointmentRecordDTO appointmentRecordDTO)
         {
             if (appointmentRecordDTO != null)
@@ -53,13 +52,26 @@ namespace BLL.Services
             var appointment = Database.Appointments.Find(x => x.AppointmentId == appointmentDTO.AppointmentId).FirstOrDefault();
             appointment = MapperUtil.UpdateAppointmentFieldsFromDTO(appointment, appointmentDTO);
             Database.Appointments.Update(appointment);
+            Database.Save();
         }
-        public void DeleteAppointment(AppointmentDTO appointmentDTO)
+        public void EditAppointmentRecord(AppointmentRecordDTO appointmentDTO)
         {
+            var appointment = Database.AppointmentRecords.Find(x => x.AppointmentRecordId == appointmentDTO.AppointmentRecordId).FirstOrDefault();
+            appointment = MapperUtil.UpdateAppointmentRecordFieldsFromDTO(appointment, appointmentDTO);
+            Database.AppointmentRecords.Update(appointment);
+            Database.Save();
+        }
 
-        }
-        public void CommitChanges()
+        public void DeleteAppointment(long appointmentId)
         {
+            var appointment = Database.Appointments.Find(x => x.AppointmentId == appointmentId).FirstOrDefault();
+            Database.Appointments.Delete(appointmentId);
+            Database.Save();
+        }
+        public void DeleteAppointmentRecord(long appointmentRecordId)
+        {
+            var appointment = Database.AppointmentRecords.Find(x => x.AppointmentRecordId == appointmentRecordId).FirstOrDefault();
+            Database.Appointments.Delete(appointmentRecordId);
             Database.Save();
         }
 
@@ -67,7 +79,7 @@ namespace BLL.Services
         {
             Doctor doctor = Database.Doctors.GetAll().Select(x => x).Where(docId => docId.DoctorId == id).FirstOrDefault();
             if (doctor != null) {
-                return doctor.LastName + " " + doctor.FirstName + " " + doctor.Patronymic;
+                return doctor.LastName + " " + doctor.FirstName + " " + doctor.Patronymic + " (" + doctor.Speciality + " )";
             }
             else
             {
@@ -97,9 +109,14 @@ namespace BLL.Services
             return MapperUtil.MapToAppointmentDTOList(Database.Appointments.GetAll());
         }
 
-        public IEnumerable<AppointmentRecordDTO> GetAppointmentsRecords()
+        public IEnumerable<AppointmentRecordDTO> GetAppointmentRecords()
         {
             return MapperUtil.MapToAppointmentRecordDTOList(Database.AppointmentRecords.GetAll());
         }
+        public IEnumerable<AppointmentRecordDTO> GetAppointmentRecordsByAppointment(long appointmentId)
+        {
+            return MapperUtil.MapToAppointmentRecordDTOList(Database.AppointmentRecords.GetAll().Where(x=>x.AppointmentId == appointmentId));
+        }
+
     }
 }

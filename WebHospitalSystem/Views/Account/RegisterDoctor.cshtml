@@ -15,28 +15,35 @@
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.FirstName)
-            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new {placeholder = "Имя", @class="form-control"} })
+            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { placeholder = "Имя", @class = "form-control" } })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.LastName)
-            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new {placeholder = "Фамилия", @class="form-control"} })
+            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { placeholder = "Фамилия", @class = "form-control" } })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.Patronymic)
-            @Html.EditorFor(model => model.Patronymic, new { htmlAttributes = new {placeholder = "Отчество", @class="form-control"} })
+            @Html.EditorFor(model => model.Patronymic, new { htmlAttributes = new { placeholder = "Отчество", @class = "form-control" } })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.PhoneNumber)
-            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new {placeholder = "Телефонный номер", @class="form-control"} })
+            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { placeholder = "Телефонный номер", @class = "form-control" } })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col">
+            @Html.ValidationMessageFor(model => model.Speciality)
+            @Html.EditorFor(model => model.Speciality, new { htmlAttributes = new { placeholder = "Специальность", @class = "form-control" } })
         </div>
     </div>
     <br />
@@ -44,21 +51,21 @@
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.Login)
-            @Html.EditorFor(model => model.Login, new { htmlAttributes = new {placeholder = "Логин", @class="form-control"} })
+            @Html.EditorFor(model => model.Login, new { htmlAttributes = new { placeholder = "Логин", @class = "form-control" } })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.Password)
-            @Html.EditorFor(model => model.Password, new { htmlAttributes = new {placeholder = "Введите пароль", @class="form-control"} })
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { placeholder = "Введите пароль", @class = "form-control" } })
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col">
             @Html.ValidationMessageFor(model => model.ConfirmPassword)
-            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new {placeholder = "Подтвердите пароль", @class="form-control"} })
+            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { placeholder = "Подтвердите пароль", @class = "form-control" } })
         </div>
     </div>
     <br />

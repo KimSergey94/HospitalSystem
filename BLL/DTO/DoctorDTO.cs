@@ -8,5 +8,6 @@
         public string LastName { get; set; }
         public string Patronymic { get; set; }
         public string PhoneNumber { get; set; }
+        public string Speciality { get; set; }
     }
 }

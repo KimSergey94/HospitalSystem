@@ -2,11 +2,9 @@
 using System.Web.Mvc;
 using System.Linq;
 using System.Web.Security;
-using BLL.DTO;
 using BLL.Interfaces;
 using WebHospitalSystem.Models;
 using WebHospitalSystem.Utils;
-using BLL.Util;
 
 namespace WebHospitalSystem.Controllers
 {
@@ -40,6 +38,18 @@ namespace WebHospitalSystem.Controllers
             return appointments;
         }
 
+        [ChildActionOnly]
+        public PartialViewResult ListAppointmentRecords() { return PartialView("_ListAppointmentRecords", GetAppointmentRecords()); }
+        private List<AppointmentRecordVM> GetAppointmentRecords()
+        {
+            return MapperUtilVM.MapToAppointmentRecordVMList(appointmentService.GetAppointmentRecords());
+        }
+        [HttpPost]
+        public ActionResult AJAXGetAppointmentRecords(long appointmentId)
+        {
+            return PartialView("_ListAppointmentRecords", appointmentService.GetAppointmentRecordsByAppointment(appointmentId));
+        }
+        
         [HttpGet]
         public PartialViewResult CreateAppointment()
         {
@@ -72,14 +82,53 @@ namespace WebHospitalSystem.Controllers
             return PartialView("_EditAppointment", appointment);
         }
         [HttpPost]
-        public JsonResult EditAppointment(AppointmentVM appointmentVM) // id check
+        public JsonResult EditAppointment(AppointmentVM appointmentVM) 
         {
             appointmentService.EditAppointment(MapperUtilVM.MapToAppointmentDTO(appointmentVM));
             return Json(appointmentVM, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public ActionResult DeleteAppointment(long appointmentId)
+        {
+            appointmentService.DeleteAppointment(appointmentId);
+            return RedirectToAction("ListAppointments", "Appointment");
+        }
+
+        [HttpGet]
+        public PartialViewResult AddAppointmentRecord(long appointmentId)
+        {
+            ViewBag.appointmentID = appointmentId;
+            return PartialView("_AddAppointmentRecord", new Models.AppointmentRecordVM());
+        }
+        [HttpPost]
+        public JsonResult AddAppointmentRecord(AppointmentRecordVM appointmentRecordVM)
+        {
+            appointmentService.AddAppointmentRecord(MapperUtilVM.MapToAppointmentRecordDTO(appointmentRecordVM));
+            return Json(appointmentRecordVM, JsonRequestBehavior.AllowGet);
+        }
 
 
+
+        [HttpGet]
+        public PartialViewResult EditAppointmentRecord(long appointmentRecordId)
+        {
+            AppointmentRecordVM appointment = MapperUtilVM.MapToAppointmentRecordVM(appointmentService.GetAppointment(appointmentRecordId));
+            return PartialView("_EditAppointment", appointment);
+        }
+        [HttpPost]
+        public JsonResult EditAppointmentRecord(AppointmentRecordVM appointmentRecordVM)
+        {
+            appointmentService.EditAppointmentRecord(MapperUtilVM.MapToAppointmentRecordDTO(appointmentRecordVM));
+            return Json(appointmentRecordVM, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult DeleteAppointmentRecord(long appointmentRecordId)
+        {
+            appointmentService.DeleteAppointmentRecord(appointmentRecordId);
+            return RedirectToAction("ListAppointments", "Appointment");
+        }
         protected override void Dispose(bool disposing)
         {
             appointmentService.Dispose();

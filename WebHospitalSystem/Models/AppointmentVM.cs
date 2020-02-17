@@ -26,9 +26,23 @@ namespace WebHospitalSystem.Models
         [Display(Name = "Диагноз")]
         public string Diagnosis { get; set; }
 
+
+
+
+        [Display(Name = "Симптомы")]
+        public string Symptom { get; set; }
+
+        [Display(Name = "Дата посещения")]
+        public System.DateTime Date { get; set; }
+
+
+
+
+
         public AppointmentVM()
         {
             Patient = new PatientVM ();
+            Doctor = new DoctorVM ();
         }
     }
 }
