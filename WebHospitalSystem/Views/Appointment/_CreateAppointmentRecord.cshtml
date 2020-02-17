@@ -39,7 +39,7 @@
         var symptom = document.getElementById("Symptom").value;
         var date = document.getElementById("Date").value;
         var appointmentId = document.getElementById("AppointmentId");
-        appointmentId = @ViewBag.appointmentID;
+        appointmentId.value = @ViewBag.appointmentID;
         var jsonDetails = { "Symptom": symptom, "Date": date, "appointmentId": appointmentId };
 
         $.post('/appointment/AddAppointmentRecord', jsonDetails,

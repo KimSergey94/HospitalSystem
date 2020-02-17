@@ -67,6 +67,19 @@ namespace WebHospitalSystem.Controllers
         }
 
         [HttpGet]
+        public PartialViewResult CreateAppointmentRecord(long appointmentId)
+        {
+            ViewBag.appointmentID = appointmentId;
+            return PartialView("_CreateAppointmentRecord", new Models.AppointmentRecordVM());
+        }
+        [HttpPost]
+        public JsonResult CreateAppointmentRecord(AppointmentRecordVM appointmentRecordVM)
+        {
+            appointmentService.AddAppointmentRecord(MapperUtilVM.MapToAppointmentRecordDTO(appointmentRecordVM));
+            return Json(appointmentRecordVM, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public PartialViewResult EditAppointment(long appointmentId)
         {
             List<DoctorVM> doctorVMs = MapperUtilVM.MapToDoctorVMList(doctorService.GetDoctors());
@@ -87,28 +100,6 @@ namespace WebHospitalSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteAppointment(long appointmentId)
-        {
-            appointmentService.DeleteAppointment(appointmentId);
-            return RedirectToAction("ListAppointments", "Appointment");
-        }
-
-        [HttpGet]
-        public PartialViewResult AddAppointmentRecord(long appointmentId)
-        {
-            ViewBag.appointmentID = appointmentId;
-            return PartialView("_AddAppointmentRecord", new Models.AppointmentRecordVM());
-        }
-        [HttpPost]
-        public JsonResult AddAppointmentRecord(AppointmentRecordVM appointmentRecordVM)
-        {
-            appointmentService.AddAppointmentRecord(MapperUtilVM.MapToAppointmentRecordDTO(appointmentRecordVM));
-            return Json(appointmentRecordVM, JsonRequestBehavior.AllowGet);
-        }
-
-
-
-        [HttpGet]
         public PartialViewResult EditAppointmentRecord(long appointmentRecordId)
         {
             AppointmentRecordVM appointment = MapperUtilVM.MapToAppointmentRecordVM(appointmentService.GetAppointment(appointmentRecordId));
@@ -122,11 +113,19 @@ namespace WebHospitalSystem.Controllers
         }
 
         [HttpGet]
+        public ActionResult DeleteAppointment(long appointmentId)
+        {
+            appointmentService.DeleteAppointment(appointmentId);
+            return RedirectToAction("ListAppointments", "Appointment");
+        }
+
+        [HttpGet]
         public ActionResult DeleteAppointmentRecord(long appointmentRecordId)
         {
             appointmentService.DeleteAppointmentRecord(appointmentRecordId);
             return RedirectToAction("ListAppointments", "Appointment");
         }
+
         protected override void Dispose(bool disposing)
         {
             appointmentService.Dispose();
