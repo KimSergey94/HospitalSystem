@@ -29,6 +29,12 @@ textarea {
 #gbox_jqGPatients {
     width: 1279px;
 }
-/*#appointmentRecordsTable, .toHide {
-    display: none;
-}*/
+.btnsLink {
+    color: darkred;
+}
+#appointmentsTable > thead, #appointmentRecordsTable > thead {
+    color: steelblue;
+}
+.btns {
+    margin-top: -6px;
+}

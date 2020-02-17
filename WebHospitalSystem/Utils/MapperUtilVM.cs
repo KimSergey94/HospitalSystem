@@ -97,10 +97,10 @@ namespace WebHospitalSystem.Utils
             return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentVM>()).CreateMapper()
                 .Map<AppointmentDTO, AppointmentVM>(appointmentDTO);
         }
-        public static AppointmentRecordVM MapToAppointmentRecordVM(AppointmentDTO appointmentRecordDTO)
+        public static AppointmentRecordVM MapToAppointmentRecordVM(AppointmentRecordDTO appointmentRecordDTO)
         {
-            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentRecordVM>()).CreateMapper()
-                .Map<AppointmentDTO, AppointmentRecordVM>(appointmentRecordDTO);
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentRecordDTO, AppointmentRecordVM>()).CreateMapper()
+                .Map<AppointmentRecordDTO, AppointmentRecordVM>(appointmentRecordDTO);
         }
 
 

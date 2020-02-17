@@ -3,22 +3,18 @@
 <br />
 <h2 class="toHide">Список деталей приема пациентов</h2>
 <hr />
-
-<p>
-    <input class="toHide" type="button" value="Добавить детали к записи" onclick="createAppointmentRecord()" />
-    <input id="selectedIdDetail" type="text" hidden="hidden" />
-</p>
 @{
     WebGrid webGrid = new WebGrid(source: Model);
     @webGrid.GetHtml(
         htmlAttributes: new { @class = "toHide appointmentRecordsTable", @id = "appointmentRecordsTable" },
         tableStyle: "table",
         columns: new[]{
-        webGrid.Column("Symptom", "Жалобы"),
-        webGrid.Column("Date", "Дата"),
-        webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' value=Редактировать onclick='editAppointmentRecord("+item.AppointmentId+")'/>" +
-"<input type='button' value='Добавить детали' onclick='createAppointmentRecord("+item.AppointmentId+")'/>")</text>),
-webGrid.Column(header: "Delete", format: @<text>@Html.ActionLink("X", "DeleteAppointmentRecord", new { appointmentRecordId = item.AppointmentRecordId }, new {onclick= "return confirm('Вы уверены что хотите удалить выбранную запись?');" })</text>),
+            webGrid.Column(null, format: @<text>@Html.Raw("<input type='text' class='appId' hidden='hidden'value="+item.AppointmentId+" '/>")</text>),
+            webGrid.Column("Symptom", "Жалобы"),
+            webGrid.Column("Date", "Дата"),
+            webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' class='btn btn-light btns' value=Редактировать onclick='editAppointmentRecord("+item.AppointmentRecordId+")'/>")</text>),
+            webGrid.Column(null, format: @<text>@Html.ActionLink("Удалить", "DeleteAppointmentRecord", new { appointmentRecordId = item.AppointmentRecordId }, 
+                                                           new { @class = "btnsLink", onclick= "return confirm('Вы уверены что хотите удалить выбранную запись?');" })</text>)
 })
 }
 
@@ -26,8 +22,9 @@ webGrid.Column(header: "Delete", format: @<text>@Html.ActionLink("X", "DeleteApp
 
 <script type="text/javascript">
     function createAppointmentRecord(appointmentId) {
+        alert(appointmentId);
         var x = $('#popuprecords');
-        x.load('/appointment/createAppointmentRecord?appointmentId=' + appointmentId, function () {
+        x.load('/appointment/createAppRecord?appointmentId=' + appointmentId, function () {
             x.dialog({
                 show: {
                     effect: "blind",
@@ -40,7 +37,7 @@ webGrid.Column(header: "Delete", format: @<text>@Html.ActionLink("X", "DeleteApp
                 modal: true,
                 width: 550,
                 height: 600,
-                title: "Запись на прием",
+                title: "Добавление деталей записи на прием",
                 resizable: false
             });
         });

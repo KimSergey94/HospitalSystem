@@ -408,8 +408,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\RegisterDoctor.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
@@ -430,16 +428,15 @@
     <Content Include="Views\Shared\_navBar.cshtml" />
     <Content Include="Views\Home\EditDoctor.cshtml" />
     <Content Include="Views\Home\DeleteDoctor.cshtml" />
-    <Content Include="Views\Appointment\Index.cshtml" />
     <Content Include="Views\Appointment\_CreateAppointment.cshtml" />
     <Content Include="Views\Appointment\_EditAppointment.cshtml" />
     <Content Include="Views\Shared\temp.cshtml" />
     <Content Include="Views\Shared\temp2.cshtml" />
     <Content Include="Views\Shared\_LayoutWithoutBundles.cshtml" />
-    <Content Include="Views\Appointment\_CreateAppointmentRecord.cshtml" />
     <Content Include="Views\Appointment\_ListAppointmentRecords.cshtml" />
     <Content Include="Views\Shared\temp3.cshtml" />
     <Content Include="Views\Appointment\_EditAppointmentRecord.cshtml" />
+    <Content Include="Views\Appointment\_CreateAppRecord.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

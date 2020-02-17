@@ -5,7 +5,7 @@
         <a class="navbar-brand" href="/">Клиника</a>
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mr-auto">
-                <li class="nav-item"><a href="/Home/ListDoctors" class="nav-link">Список врачей</a></li>
+                <li class="nav-item"><a href="/Home/ListDoctors" class="nav-link">Врачи</a></li>
                 @if (Request.IsAuthenticated && Session["Role"] != null && Session["Role"].ToString().Equals("Doctor"))
                 {
                     <li class="nav-item"><a href="/Home/PatientsList" class="nav-link">Пациенты</a></li>
@@ -19,10 +19,8 @@
                             <a href="/Home/FindPatientByPatronymic" class="dropdown-item">Найти пациента по отчеству</a>
                         </div>
                     </li>
-                    <li class="nav-item"><a href="/Account/RegisterDoctor" class="nav-link">Регистрация врачей</a></li>
                 }
             </ul>
-
             @Html.Partial("_LoginPartial")
         </div>
     </div>

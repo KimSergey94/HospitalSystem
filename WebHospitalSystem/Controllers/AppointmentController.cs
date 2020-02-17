@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using System.Linq;
 using System.Web.Security;
 using BLL.Interfaces;
 using WebHospitalSystem.Models;
@@ -41,7 +40,7 @@ namespace WebHospitalSystem.Controllers
         [ChildActionOnly]
         public PartialViewResult ListAppointmentRecords() { return PartialView("_ListAppointmentRecords", GetAppointmentRecords()); }
         public PartialViewResult AJAXGetAppointmentRecords(long appointmentId) { 
-            return PartialView("_ListAppointmentRecords", appointmentService.GetAppointmentRecordsByAppointment(appointmentId));
+            return PartialView("_ListAppointmentRecords", MapperUtilVM.MapToAppointmentRecordVMList(appointmentService.GetAppointmentRecordsByAppointment(appointmentId)));
         }
         private List<AppointmentRecordVM> GetAppointmentRecords()
         {
@@ -65,15 +64,14 @@ namespace WebHospitalSystem.Controllers
             appointmentService.AddAppointment(MapperUtilVM.MapToAppointmentDTO(appointmentVM));
             return Json(appointmentVM, JsonRequestBehavior.AllowGet);
         }
-
         [HttpGet]
-        public PartialViewResult CreateAppointmentRecord(long appointmentId)
+        public PartialViewResult CreateAppRecord(long appointmentId)
         {
             ViewBag.appointmentID = appointmentId;
-            return PartialView("_CreateAppointmentRecord", new Models.AppointmentRecordVM());
+            return PartialView("_CreateAppRecord", new Models.AppointmentRecordVM());
         }
         [HttpPost]
-        public JsonResult CreateAppointmentRecord(AppointmentRecordVM appointmentRecordVM)
+        public JsonResult CreateAppRecord(AppointmentRecordVM appointmentRecordVM)
         {
             appointmentService.AddAppointmentRecord(MapperUtilVM.MapToAppointmentRecordDTO(appointmentRecordVM));
             return Json(appointmentRecordVM, JsonRequestBehavior.AllowGet);
@@ -102,8 +100,8 @@ namespace WebHospitalSystem.Controllers
         [HttpGet]
         public PartialViewResult EditAppointmentRecord(long appointmentRecordId)
         {
-            AppointmentRecordVM appointment = MapperUtilVM.MapToAppointmentRecordVM(appointmentService.GetAppointment(appointmentRecordId));
-            return PartialView("_EditAppointment", appointment);
+            AppointmentRecordVM appointment = MapperUtilVM.MapToAppointmentRecordVM(appointmentService.GetAppointmentRecord(appointmentRecordId));
+            return PartialView("_EditAppointmentRecord", appointment);
         }
         [HttpPost]
         public JsonResult EditAppointmentRecord(AppointmentRecordVM appointmentRecordVM)

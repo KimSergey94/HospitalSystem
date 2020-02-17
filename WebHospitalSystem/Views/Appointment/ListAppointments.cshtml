@@ -16,7 +16,6 @@
 
 <p>
     <input type="button" value="Запись на прием к врачу" onclick="createAppointment()" />
-    <input id="selectedId" type="text" hidden="hidden" />
 </p>
 @{
     WebGrid webGrid = new WebGrid(source: Model);
@@ -25,16 +24,18 @@
         tableStyle: "table",
         columns: new[]{
             webGrid.Column(null, style: "appIdDiv", format: @<text>@Html.Raw("<input type='text' class='appId' hidden='hidden'value="+item.AppointmentId+" '/>")</text>),
-webGrid.Column("DoctorName", "ФИО врача"),
-webGrid.Column("PatientName", "ФИО пациента"),
-webGrid.Column("Diagnosis", "Диагноз"),
-webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' value=Редактировать onclick='editAppointment("+item.AppointmentId+")'/>" +
-"<input type='button' value='Добавить детали' onclick='createAppointmentRecord("+item.AppointmentId+")'/>")</text>),
-webGrid.Column(header: "Delete", format: @<text>@Html.ActionLink("X", "DeleteAppointment", new { appointmentId = item.AppointmentId }, new {onclick= "return confirm('Вы уверены что хотите удалить все записи относительно выбранного приема?');" })</text>),
+            webGrid.Column("DoctorName", "ФИО врача"),
+            webGrid.Column("PatientName", "ФИО пациента"),
+            webGrid.Column("Diagnosis", "Диагноз"),
+            webGrid.Column(null, format: @<text>@Html.Raw("<div class='row'>" +
+            "<input type='button' class='btn btn-light btns' value=Редактировать onclick='editAppointment("+item.AppointmentId+")'/>" +
+            "<input type='button' class='btn btn-light btns' value='Добавить детали' onclick='createAppointmentRecord("+item.AppointmentId+")'/>")</text>),
+            webGrid.Column(null, format: @<text>@Html.ActionLink("Удалить", "DeleteAppointmentRecord", new { appointmentRecordId = item.AppointmentId },
+             new { @class="btnsLink", onclick= "return confirm('Вы уверены что хотите удалить выбранную запись?');" })</text>)
+
 })
 
 }
-<br />
 <div class="appointmentRecordsTableDiv" id="appointmentRecordsTableDiv">
     @{Html.RenderAction("ListAppointmentRecords", "Appointment");}
 </div>
@@ -85,19 +86,15 @@ webGrid.Column(header: "Delete", format: @<text>@Html.ActionLink("X", "DeleteApp
 
     $(document).ready(function () {
         $("#appointmentRecordsTable").hide();
-        $(".toHide").each(function (index){}).hide();
-
+        $(".toHide").each(function (index) { }).hide();
     });
     function clearSelection() {
         $("tr").each(function (index) {
             $(this).css('background', 'none');
         });
-        //$(".toHide").each(function (index){}).css('display', 'block');
-        //$('#appointmentRecordsTable').css('display', 'table');
     }
     $("#appointmentsTable tbody tr").click(function () {
         var appointmentId = $(this).find('.appIdDiv .appId').attr("value");
-        $("#appointmentRecordsTableDiv").load('/Appointment/AJAXGetAppointmentRecords?appointmentId=' + appointmentId);
         loadTable(appointmentId);
         $(this).css('background', 'lightblue');
     });

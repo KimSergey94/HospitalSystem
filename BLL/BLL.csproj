@@ -47,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BLL\Discount.cs" />
     <Compile Include="DTO\AppointmentDTO.cs" />
     <Compile Include="DTO\AppointmentRecordDTO.cs" />
     <Compile Include="DTO\DoctorDTO.cs" />

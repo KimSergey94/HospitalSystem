@@ -90,6 +90,12 @@ namespace BLL.Util
             return new MapperConfiguration(cfg => cfg.CreateMap<Appointment, AppointmentDTO>()).CreateMapper()
                 .Map<Appointment, AppointmentDTO>(appointment);
         }
+        public static AppointmentRecordDTO MapToAppointmentRecordDTO(AppointmentRecord appointmentRecord)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentRecord, AppointmentRecordDTO>()).CreateMapper()
+                .Map<AppointmentRecord, AppointmentRecordDTO>(appointmentRecord);
+        }
+        
         public static Appointment UpdateAppointmentFieldsFromDTO(Appointment appointment, AppointmentDTO appointmentDTO)
         {
             appointment.DoctorId = appointmentDTO.DoctorId;

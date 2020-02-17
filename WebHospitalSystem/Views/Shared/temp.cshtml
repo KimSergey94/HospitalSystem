@@ -1,41 +1,48 @@
 ﻿@model IEnumerable<WebHospitalSystem.Models.AppointmentVM>
-
 @{
     ViewBag.Title = "Список приема пациентов";
+    Layout = "~/Views/Shared/_LayoutWithoutBundles.cshtml";
+
 }
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
 
 <br />
 <h2>Список приема пациентов</h2>
 <hr />
 
 <p>
-    <input type="button" value="Запись на прием к врачу" onclick="createpopup()" />
+    <input type="button" value="Запись на прием к врачу" onclick="createAppointment()" />
+    <input id="selectedId" type="text" hidden="hidden" />
 </p>
-
 @{
     WebGrid webGrid = new WebGrid(source: Model);
     @webGrid.GetHtml(
-        htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
+        htmlAttributes: new { @class = "appointmentsTable", @id = "appointmentsTable" },
         tableStyle: "table",
         columns: new[]{
-            webGrid.Column(header: "ID приема", format: @<span class="label">@item.AppointmentId</span>, style: "AppointmentId" ),
+            webGrid.Column(null, style: "appIdDiv", format: @<text>@Html.Raw("<input type='text' class='appId' hidden='hidden'value="+item.AppointmentId+" '/>")</text>),
 webGrid.Column("DoctorName", "ФИО врача"),
 webGrid.Column("PatientName", "ФИО пациента"),
 webGrid.Column("Diagnosis", "Диагноз"),
-webGrid.Column(null, format:@<span class="link"> <a class="Edit" href="javascript:;">Edit</a> </span> )
+webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' value=Редактировать onclick='editAppointment("+item.AppointmentId+")'/>" +
+"<input type='button' value='Добавить детали' onclick='createAppointmentRecord("+item.AppointmentId+")'/>")</text>),
+webGrid.Column(header: "Delete", format: @<text>@Html.ActionLink("X", "DeleteAppointment", new { appointmentId = item.AppointmentId }, new {onclick= "return confirm('Вы уверены что хотите удалить все записи относительно выбранного приема?');" })</text>),
+})
 
-                                    @*webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' value=Редактировать onclick='editAppointment("+item.AppointmentId+")'/>")</text>)*@
-
-                                    @*webGrid.Column(null,null, format: @<input type="hidden" name="DoctorId" value="@Model.DoctorId" />),
-                                        webGrid.Column(null,null, format: @<input type="hidden" name="PatientId" value="@Model.PatientId" />),*@
 }
-)
-}
+<br />
+<div class="appointmentRecordsTableDiv" id="appointmentRecordsTableDiv">
+    @{Html.RenderAction("ListAppointmentRecords", "Appointment");}
+</div>
 
 <div id="popup" style="display:none"></div>
 
 <script type="text/javascript">
-    function createpopup() {
+    function createAppointment() {
         var x = $('#popup');
         x.load('/appointment/createAppointment', function () {
             x.dialog({
@@ -55,12 +62,10 @@ webGrid.Column(null, format:@<span class="link"> <a class="Edit" href="javascrip
             });
         });
     }
-
-    function editAppointment(appId) {
-        alert(item.AppointmentId);
-        var x = $('#popup');
-        x.load('/appointment/editAppointment?appointmentId=' + appId, function () {
-            x.dialog({
+    function editAppointment(appointmentId) {
+        var y = $('#popup');
+        y.load('/appointment/editAppointment?appointmentId=' + appointmentId, function () {
+            y.dialog({
                 show: {
                     effect: "blind",
                     duration: 1000
@@ -78,15 +83,25 @@ webGrid.Column(null, format:@<span class="link"> <a class="Edit" href="javascrip
         });
     }
 
-    $("body").on("click", "#WebGrid TBODY .Edit", function () {
-            var appointmentId =  row.find(".AppointmentId").find(".label").html();
-            $.ajax({
-                type: "POST",
-                url: "/Home/UpdateCustomer",
-                data: '{customer:' + JSON.stringify(customer) + '}',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            });
+    $(document).ready(function () {
+        $("#appointmentRecordsTable").hide();
+        $(".toHide").each(function (index) { }).hide();
     });
-
+    function clearSelection() {
+        $("tr").each(function (index) {
+            $(this).css('background', 'none');
+        });
+    }
+    $("#appointmentsTable tbody tr").click(function () {
+        var appointmentId = $(this).find('.appIdDiv .appId').attr("value");
+        $("#appointmentRecordsTableDiv").load('/Appointment/AJAXGetAppointmentRecords?appointmentId=' + appointmentId);
+        loadTable(appointmentId);
+        $(this).css('background', 'lightblue');
+    });
 </script>
+<script type="text/jscript">
+    function loadTable(appointId) {
+        $("#appointmentRecordsTableDiv").load('/Appointment/AJAXGetAppointmentRecords?appointmentId=' + appointId);
+        clearSelection();
+    }
+</script> 

@@ -21,28 +21,27 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.Date, new { @type = "date", @class = "form-control datepicker"})
+            @Html.TextBoxFor(model => model.Date, new { @type = "date", @class = "form-control datepicker" })
             @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
         </div>
-    </div>  
+    </div>
     <br />
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Добавить данные" class="btn btn-dark" onclick="addAppointmentRecord()" />
+            <input type="submit" value="Добавить данные" class="btn btn-dark" onclick="saveAppointmentRecord()" />
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    function addAppointmentRecord() {
+    function saveAppointmentRecord() {
         var symptom = document.getElementById("Symptom").value;
         var date = document.getElementById("Date").value;
-        var appointmentId = document.getElementById("AppointmentId");
-        appointmentId.value = @ViewBag.appointmentID;
+        var appointmentId = document.getElementById("AppointmentId").value;
         var jsonDetails = { "Symptom": symptom, "Date": date, "appointmentId": appointmentId };
 
-        $.post('/appointment/AddAppointmentRecord', jsonDetails,
+        $.post('/appointment/CreateAppRecord', jsonDetails,
             function (data) {
                 if (data == 0) {
                     location = location.href;

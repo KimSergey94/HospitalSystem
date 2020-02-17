@@ -38,6 +38,12 @@ namespace BLL.Services
         {
             return MapperUtil.MapToAppointmentDTO(Database.Appointments.Find(x => x.AppointmentId == id).FirstOrDefault());
         }
+        public AppointmentRecordDTO GetAppointmentRecord(long id)
+        {
+            return MapperUtil.MapToAppointmentRecordDTO(Database.AppointmentRecords.Find(x => x.AppointmentId == id).FirstOrDefault());
+
+        }
+
         public bool IsAppointmentIdValid(long id)
         {
             if(Database.Appointments.Find(x => x.AppointmentId == id).FirstOrDefault() != null)
@@ -54,10 +60,10 @@ namespace BLL.Services
             Database.Appointments.Update(appointment);
             Database.Save();
         }
-        public void EditAppointmentRecord(AppointmentRecordDTO appointmentDTO)
+        public void EditAppointmentRecord(AppointmentRecordDTO appointmentRecordDTO)
         {
-            var appointment = Database.AppointmentRecords.Find(x => x.AppointmentRecordId == appointmentDTO.AppointmentRecordId).FirstOrDefault();
-            appointment = MapperUtil.UpdateAppointmentRecordFieldsFromDTO(appointment, appointmentDTO);
+            var appointment = Database.AppointmentRecords.Find(x => x.AppointmentRecordId == appointmentRecordDTO.AppointmentRecordId).FirstOrDefault();
+            appointment = MapperUtil.UpdateAppointmentRecordFieldsFromDTO(appointment, appointmentRecordDTO);
             Database.AppointmentRecords.Update(appointment);
             Database.Save();
         }
@@ -71,7 +77,7 @@ namespace BLL.Services
         public void DeleteAppointmentRecord(long appointmentRecordId)
         {
             var appointment = Database.AppointmentRecords.Find(x => x.AppointmentRecordId == appointmentRecordId).FirstOrDefault();
-            Database.Appointments.Delete(appointmentRecordId);
+            Database.AppointmentRecords.Delete(appointmentRecordId);
             Database.Save();
         }
 
