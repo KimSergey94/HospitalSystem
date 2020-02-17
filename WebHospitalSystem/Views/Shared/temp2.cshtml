@@ -17,15 +17,15 @@
 @{
     WebGrid webGrid = new WebGrid(source: Model);
     @webGrid.GetHtml(
-        tableStyle: "table",
-        columns: new[]{
-        webGrid.Column("AppointmentId", "ID приема"),
-        webGrid.Column("DoctorName", "ФИО врача"),
-webGrid.Column("PatientName", "ФИО пациента"),
-webGrid.Column("Diagnosis", "Диагноз"),
-webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' class='editCall' id='@item.AppointmentId' value=Edit onclick='editAppointment("+item.AppointmentId+")'/>")</text>
-
-) })
+        htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
+        columns: webGrid.Columns(
+                 webGrid.Column(header: "ID приема", format: @<span class="label">@item.AppointmentId</span>, style: "AppointmentId"),
+webGrid.Column(header: "ФИО врача", format: @<span class="label">@item.DoctorName</span>, style: "DoctorName"),
+webGrid.Column(header: "ФИО пациента", format: @<span class="label">@item.PatientName</span>, style: "PatientName"),
+webGrid.Column(header: "Диагноз", format: @<span class="label">@item.Diagnosis</span>, style: "Diagnosis"),
+webGrid.Column(format:@<span class="link">
+            <a class="edit" id="@item.AppointmentId" onclick="editAppointment()">Редактировать</a>
+        </span>)))
 }
 
 
@@ -54,9 +54,19 @@ webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' class='editC
     }
 
 
-    function editAppointment(appointmentId) {
+
+    var appointmentId;
+    var inputText;
+    $('.edit').on('click', function (e) {
+        appointmentId = $(this).prop('id');
+        inputText = document.getElementById("selectedId");
+        inputText.innerText = $(this).prop('id');
+        alert(inputText.innerText);
+        editAppointment();
+    });
+    function editAppointment() {
         var y = $('#popup');
-        y.load('/appointment/editAppointment?appointmentId=' + appointmentId, function () {
+        y.load('/appointment/editAppointment?appointmentId='+inputText.innerText, function () {
             y.dialog({
                 show: {
                     effect: "blind",

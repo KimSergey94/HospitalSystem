@@ -29,5 +29,13 @@ namespace WebHospitalSystem.Models
         [Required(ErrorMessage = "Введите адрес проживания")]
         [Display(Name = "Адрес проживания")]
         public string Address { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return string.Format("{0} {1} {2}", LastName, FirstName, Patronymic);
+            }
+        }
     }
 }

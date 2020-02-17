@@ -78,5 +78,31 @@ namespace BLL.Util
             return new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>()).CreateMapper()
              .Map<User, UserDTO>(user);
         }
+
+        public static Appointment MapToAppointment(AppointmentDTO appointmentDTO)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, Appointment>()).CreateMapper()
+                .Map<AppointmentDTO, Appointment>(appointmentDTO);
+        }
+        public static AppointmentDTO MapToAppointmentDTO(Appointment appointment)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<Appointment, AppointmentDTO>()).CreateMapper()
+                .Map<Appointment, AppointmentDTO>(appointment);
+        }
+        public static Appointment UpdateAppointmentFieldsFromDTO(Appointment appointment, AppointmentDTO appointmentDTO)
+        {
+            appointment.DoctorId = appointmentDTO.DoctorId;
+            appointment.PatientId = appointmentDTO.PatientId;
+            appointment.Diagnosis = appointmentDTO.Diagnosis;
+            return appointment;
+        }
+
+        public static AppointmentRecord MapToAppointmentRecord(AppointmentRecordDTO appointmentRecordDTO)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentRecordDTO, AppointmentRecord>()).CreateMapper()
+                .Map<AppointmentRecordDTO, AppointmentRecord>(appointmentRecordDTO);
+        }
+
+
     }
 }

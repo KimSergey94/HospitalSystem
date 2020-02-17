@@ -16,6 +16,7 @@
             <div class="navbar-collapse collapse" id="navbarSupportedContent">
                 <ul class="nav navbar-nav mr-auto">
                     <li class="nav-item"><a href="/Home/ListDoctors" class="nav-link">Список врачей</a></li>
+                    <li class="nav-item"><a href="/Appointment/ListAppointments" class="nav-link">Прием пациентов</a></li>
                     @if (Request.IsAuthenticated && Session["Role"] != null && Session["Role"].ToString().Equals("Doctor"))
                     {
                         <li class="nav-item"><a href="/Home/PatientsList" class="nav-link">Пациенты</a></li>
@@ -45,7 +46,7 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/jquery")*@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

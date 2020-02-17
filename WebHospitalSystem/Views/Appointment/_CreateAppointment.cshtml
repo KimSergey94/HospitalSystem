@@ -1,0 +1,62 @@
+﻿@model WebHospitalSystem.Models.AppointmentVM
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<h2>Детали записи на прием</h2>
+<hr />
+
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DoctorName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.DoctorId, @ViewBag.doctorNamesList as SelectList, "-- Выберите врача --", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DoctorName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PatientName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.PatientId, @ViewBag.patientNamesList as SelectList, "-- Выберите пациента --", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PatientName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Diagnosis, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Diagnosis, new { htmlAttributes = new { @class = "form-control", @id = "diagnosis" } })
+            @Html.ValidationMessageFor(model => model.Diagnosis, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <br />
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Записать на прием" class="btn btn-dark" onclick="makeAppointment()"/>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function makeAppointment() {
+        var docIdS = document.getElementById("DoctorId");
+        var patIdS = document.getElementById("PatientId");
+        var docId = docIdS.options[docIdS.selectedIndex].value;
+        var patId = patIdS.options[patIdS.selectedIndex].value;
+        var diagnosis = document.getElementById("diagnosis").value;
+        var jsonDetails = { "DoctorId": docId, "PatientId": patId, "Diagnosis": diagnosis };
+
+        $.post('/appointment/createAppointment', jsonDetails,
+            function (data) {
+                if (data == 0) {
+                    location = location.href;
+                }
+            },
+            'json');
+        alert('Запись на прием успешно сохранена');
+        window.location = window.location;
+    }
+</script>

@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using BLL.DTO;
-using DAL.Entities;
 using System.Collections.Generic;
-using System.Linq;
 using WebHospitalSystem.Models;
 
 namespace WebHospitalSystem.Utils
 {
-    public static class MapperUtil
+    public static class MapperUtilVM
     {
         public static PatientDTO MapToPatientDTO(PatientVM patient)
         {
@@ -21,6 +19,12 @@ namespace WebHospitalSystem.Utils
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 ).CreateMapper().Map<PatientVM, PatientDTO>(patient);
         }
+        public static List<PatientVM> MapToPatientVMList(IEnumerable<PatientDTO> patientDTOs)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<PatientDTO, PatientVM>()).CreateMapper()
+                .Map<IEnumerable<PatientDTO>, List<PatientVM>>(patientDTOs);
+        }
+
         public static DoctorVM MapToDoctorVM(DoctorDTO doctorDTO)
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<DoctorDTO, DoctorVM>()
@@ -58,8 +62,6 @@ namespace WebHospitalSystem.Utils
                 ).CreateMapper().Map<RegisterDoctorVM, DoctorDTO>(doctorVM);
         }
 
-
-
         public static List<AppointmentVM> MapToAppointmentVMList(IEnumerable<AppointmentDTO> appointmentDTOs)
         {
             return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentVM>()).CreateMapper()
@@ -70,5 +72,24 @@ namespace WebHospitalSystem.Utils
             return new MapperConfiguration(cfg => cfg.CreateMap<DoctorDTO, DoctorVM>()).CreateMapper()
                 .Map<IEnumerable<DoctorDTO>, List<DoctorVM>>(doctorDTOs);
         }
+
+        public static AppointmentDTO MapToAppointmentDTO(AppointmentVM appointmentVM)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentVM, AppointmentDTO>()).CreateMapper()
+                .Map<AppointmentVM, AppointmentDTO>(appointmentVM);
+        }
+        public static AppointmentVM MapToAppointmentVM(AppointmentDTO appointmentDTO)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentDTO, AppointmentVM>()).CreateMapper()
+                .Map<AppointmentDTO, AppointmentVM>(appointmentDTO);
+        }
+        public static AppointmentRecordDTO MapToAppointmentRecordDTO(AppointmentRecordVM appointmentRecordVM)
+        {
+            return new MapperConfiguration(cfg => cfg.CreateMap<AppointmentRecordVM, AppointmentRecordDTO>()).CreateMapper()
+                .Map<AppointmentRecordVM, AppointmentRecordDTO>(appointmentRecordVM);
+        }
+
+
+
     }
 }

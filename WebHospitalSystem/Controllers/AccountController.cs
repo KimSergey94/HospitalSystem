@@ -34,7 +34,7 @@ namespace WebHospitalSystem.Controllers
             if (ModelState.IsValid) {
                 try {
                     var userDTO = userService.GetUser(user.Login);
-                    user = MapperUtil.MapToUserVM(userDTO);
+                    user = MapperUtilVM.MapToUserVM(userDTO);
 
                     if (user != null) {
                         Session["Login"] = user.Login;
@@ -68,14 +68,14 @@ namespace WebHospitalSystem.Controllers
 
                 if (user == null) {
                     model.RoleId = 1;
-                    userService.AddUser(MapperUtil.MapToUserDTO(model));
+                    userService.AddUser(MapperUtilVM.MapToUserDTO(model));
 
                     // проверяем если пользователь удачно добавлен в бд
                     var newUser = userService.GetUsers().FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password);
                     if (newUser != null) {
                         try {
                             model.UserId = newUser.UserId;
-                            doctorService.AddDoctor(MapperUtil.MapToDoctorDTO(model));
+                            doctorService.AddDoctor(MapperUtilVM.MapToDoctorDTO(model));
                             Session["Login"] = newUser.Login;
                             Session["Id"] = newUser.UserId;
                             Session["Role"] = "Doctor";

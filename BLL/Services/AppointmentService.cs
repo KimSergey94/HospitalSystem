@@ -1,8 +1,10 @@
 ﻿using BLL.DTO;
 using BLL.Interfaces;
 using BLL.Util;
+using DAL.Entities;
 using DAL.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL.Services
 {
@@ -17,14 +19,72 @@ namespace BLL.Services
 
         public void AddAppointment(AppointmentDTO appointmentDTO)
         {
-            //// применяем скидку
-            //Database.Doctors.Create(MapToDoctor(doctorDTO));
-            //Database.Save();
+            if(appointmentDTO != null)
+            {
+                Database.Appointments.Create(MapperUtil.MapToAppointment(appointmentDTO));
+                Database.Save();
+            }
         }
 
         public void AddAppointmentRecord(AppointmentRecordDTO appointmentRecordDTO)
         {
-            //// применяем скидку
+            if (appointmentRecordDTO != null)
+            {
+                Database.AppointmentRecords.Create(MapperUtil.MapToAppointmentRecord(appointmentRecordDTO));
+                Database.Save();
+            }
+        }
+
+        public AppointmentDTO GetAppointment(long id)
+        {
+            return MapperUtil.MapToAppointmentDTO(Database.Appointments.Find(x => x.AppointmentId == id).FirstOrDefault());
+        }
+        public bool IsAppointmentIdValid(long id)
+        {
+            if(Database.Appointments.Find(x => x.AppointmentId == id).FirstOrDefault() != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void EditAppointment(AppointmentDTO appointmentDTO)
+        {
+            var appointment = Database.Appointments.Find(x => x.AppointmentId == appointmentDTO.AppointmentId).FirstOrDefault();
+            appointment = MapperUtil.UpdateAppointmentFieldsFromDTO(appointment, appointmentDTO);
+            Database.Appointments.Update(appointment);
+        }
+        public void DeleteAppointment(AppointmentDTO appointmentDTO)
+        {
+
+        }
+        public void CommitChanges()
+        {
+            Database.Save();
+        }
+
+        public string GetDoctorName(int id)
+        {
+            Doctor doctor = Database.Doctors.GetAll().Select(x => x).Where(docId => docId.DoctorId == id).FirstOrDefault();
+            if (doctor != null) {
+                return doctor.LastName + " " + doctor.FirstName + " " + doctor.Patronymic;
+            }
+            else
+            {
+                return "неизвестно";
+            }
+        }
+        public string GetPatientName(long id)
+        {
+            Patient patient = Database.Patients.GetAll().Select(x => x).Where(patId => patId.PatientId == id).FirstOrDefault();
+            if (patient != null)
+            {
+                return patient.LastName + " " + patient.FirstName + " " + patient.Patronymic;
+            }
+            else
+            {
+                return "неизвестно";
+            }
         }
 
         public void Dispose()

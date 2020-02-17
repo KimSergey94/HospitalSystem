@@ -1,33 +1,36 @@
 ﻿@model IEnumerable<WebHospitalSystem.Models.AppointmentVM>
+
 @{
     ViewBag.Title = "Список приема пациентов";
 }
 
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
 <br />
 <h2>Список приема пациентов</h2>
 <hr />
 
 <p>
     <input type="button" value="Запись на прием к врачу" onclick="createpopup()" />
-    <input id="selectedId" type="text" hidden="hidden" />
 </p>
+
 @{
     WebGrid webGrid = new WebGrid(source: Model);
     @webGrid.GetHtml(
+        htmlAttributes: new { @id = "WebGrid", @class = "Grid" },
         tableStyle: "table",
         columns: new[]{
-        webGrid.Column("AppointmentId", "ID приема"),
-        webGrid.Column("DoctorName", "ФИО врача"),
+            webGrid.Column(header: "ID приема", format: @<span class="label">@item.AppointmentId</span>, style: "AppointmentId" ),
+webGrid.Column("DoctorName", "ФИО врача"),
 webGrid.Column("PatientName", "ФИО пациента"),
 webGrid.Column("Diagnosis", "Диагноз"),
-webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' class='editCall' id='@item.AppointmentId' value=Edit onclick='editAppointment("+item.AppointmentId+")'/>")</text>
+webGrid.Column(null, format:@<span class="link"> <a class="Edit" href="javascript:;">Edit</a> </span> )
 
-) })
+                                    @*webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' value=Редактировать onclick='editAppointment("+item.AppointmentId+")'/>")</text>)*@
+
+                                    @*webGrid.Column(null,null, format: @<input type="hidden" name="DoctorId" value="@Model.DoctorId" />),
+                                        webGrid.Column(null,null, format: @<input type="hidden" name="PatientId" value="@Model.PatientId" />),*@
 }
-
+)
+}
 
 <div id="popup" style="display:none"></div>
 
@@ -53,11 +56,11 @@ webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' class='editC
         });
     }
 
-
-    function editAppointment(appointmentId) {
-        var y = $('#popup');
-        y.load('/appointment/editAppointment?appointmentId=' + appointmentId, function () {
-            y.dialog({
+    function editAppointment(appId) {
+        alert(item.AppointmentId);
+        var x = $('#popup');
+        x.load('/appointment/editAppointment?appointmentId=' + appId, function () {
+            x.dialog({
                 show: {
                     effect: "blind",
                     duration: 1000
@@ -73,17 +76,17 @@ webGrid.Column(null, format: @<text>@Html.Raw("<input type='button' class='editC
                 resizable: false
             });
         });
-
-        //$.ajax({
-        //    type: "GET",
-        //    url: "/appointment/editAppointment?appointmentId=" + appointmentId,
-        //    data: 'appointmentId:' + appointmentId,
-        //    contentType: "application/json; charset=utf-8",
-        //    dataType: "json",
-        //    success: function(data){
-        //        alert('success!');
-
-        //    },
-        //});
     }
+
+    $("body").on("click", "#WebGrid TBODY .Edit", function () {
+            var appointmentId =  row.find(".AppointmentId").find(".label").html();
+            $.ajax({
+                type: "POST",
+                url: "/Home/UpdateCustomer",
+                data: '{customer:' + JSON.stringify(customer) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            });
+    });
+
 </script>

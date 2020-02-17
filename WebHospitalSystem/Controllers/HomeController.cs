@@ -95,7 +95,7 @@ namespace WebHospitalSystem.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    patientService.AddPatient(MapperUtil.MapToPatientDTO(patient));
+                    patientService.AddPatient(MapperUtilVM.MapToPatientDTO(patient));
                     msg = "Пациент добавлен успешно";
                 }
                 else
@@ -118,7 +118,7 @@ namespace WebHospitalSystem.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    patientService.EditPatient(MapperUtil.MapToPatientDTO(patient));
+                    patientService.EditPatient(MapperUtilVM.MapToPatientDTO(patient));
                     msg = "Запись пациента успешно редактирована";
                 }
                 else
@@ -170,7 +170,7 @@ namespace WebHospitalSystem.Controllers
         
         private List<DoctorVM> GetDoctors()
         {
-            return MapperUtil.MapToDoctorVMList(doctorService.GetDoctors());
+            return MapperUtilVM.MapToDoctorVMList(doctorService.GetDoctors());
         }
 
         public ActionResult Index()
@@ -183,7 +183,7 @@ namespace WebHospitalSystem.Controllers
         [Authorize(Roles = "Doctor")]
         public ActionResult EditDoctor(int id)
         {
-            return View(MapperUtil.MapToDoctorVM(doctorService.GetDoctors().FirstOrDefault(doctorID => doctorID.DoctorId == id)));
+            return View(MapperUtilVM.MapToDoctorVM(doctorService.GetDoctors().FirstOrDefault(doctorID => doctorID.DoctorId == id)));
         }
         [Authorize(Roles = "Doctor")]
         [HttpPost]
@@ -204,7 +204,7 @@ namespace WebHospitalSystem.Controllers
             DoctorDTO doctor = doctorService.GetDoctors().FirstOrDefault(doctorId => doctorId.DoctorId == id);
             if (doctor != null)
             {
-                return View(MapperUtil.MapToDoctorVM(doctor));
+                return View(MapperUtilVM.MapToDoctorVM(doctor));
             }
             else
             {

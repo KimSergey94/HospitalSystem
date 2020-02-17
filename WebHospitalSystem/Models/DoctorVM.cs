@@ -21,5 +21,13 @@ namespace WebHospitalSystem.Models
         
         [Display(Name = "ID пользователя в системе")]
         public long UserId { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return string.Format("{0} {1} {2}", LastName, FirstName, Patronymic);
+            }
+        }
     }
 }
