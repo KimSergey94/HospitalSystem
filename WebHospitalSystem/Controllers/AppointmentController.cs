@@ -40,14 +40,12 @@ namespace WebHospitalSystem.Controllers
 
         [ChildActionOnly]
         public PartialViewResult ListAppointmentRecords() { return PartialView("_ListAppointmentRecords", GetAppointmentRecords()); }
+        public PartialViewResult AJAXGetAppointmentRecords(long appointmentId) { 
+            return PartialView("_ListAppointmentRecords", appointmentService.GetAppointmentRecordsByAppointment(appointmentId));
+        }
         private List<AppointmentRecordVM> GetAppointmentRecords()
         {
             return MapperUtilVM.MapToAppointmentRecordVMList(appointmentService.GetAppointmentRecords());
-        }
-        [HttpPost]
-        public ActionResult AJAXGetAppointmentRecords(long appointmentId)
-        {
-            return PartialView("_ListAppointmentRecords", appointmentService.GetAppointmentRecordsByAppointment(appointmentId));
         }
         
         [HttpGet]

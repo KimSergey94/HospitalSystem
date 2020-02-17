@@ -17,24 +17,17 @@
     @Html.HiddenFor(model => model.AppointmentRecordId)
 
     <div class="form-group">
-        @Html.LabelFor(model => model.DoctorName, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Symptom, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.DoctorId, @ViewBag.doctorNamesList as SelectList, "-- Выберите врача --", new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.DoctorName, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.Symptom, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Symptom, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(model => model.PatientName, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.PatientId, @ViewBag.patientNamesList as SelectList, "-- Выберите пациента --", new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.PatientName, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Diagnosis, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Diagnosis, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Diagnosis, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
         </div>
     </div>
     <br />
@@ -47,15 +40,11 @@
 
 <script type="text/javascript">
     function editAppointment() {
-        var appointmentId = document.getElementById("AppointmentId").value;
-        var docIdS = document.getElementById("DoctorId");
-        var patIdS = document.getElementById("PatientId");
-        var docId = docIdS.options[docIdS.selectedIndex].value;
-        var patId = patIdS.options[patIdS.selectedIndex].value;
-        var diagnosis = document.getElementById("Diagnosis").value;
-        var jsonDetails = { "AppointmentId": appointmentId, "DoctorId": docId, "PatientId": patId, "Diagnosis": diagnosis };
+        var symptom = document.getElementById("Symptom").value;
+        var date = document.getElementById("Date").value;
+        var jsonDetails = { "Symptom": symptom, "Date": date };
 
-        $.post('/appointment/editAppointment', jsonDetails,
+        $.post('/appointment/editAppointmentRecord', jsonDetails,
             function (data) {
                 if (data == 0) {
                     location = location.href;

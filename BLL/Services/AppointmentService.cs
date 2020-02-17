@@ -115,7 +115,10 @@ namespace BLL.Services
         }
         public IEnumerable<AppointmentRecordDTO> GetAppointmentRecordsByAppointment(long appointmentId)
         {
-            return MapperUtil.MapToAppointmentRecordDTOList(Database.AppointmentRecords.GetAll().Where(x=>x.AppointmentId == appointmentId));
+            IEnumerable<AppointmentRecordDTO> appointments = MapperUtil.MapToAppointmentRecordDTOList(Database.AppointmentRecords.GetAll());
+            appointments = appointments.Where(x => x.AppointmentId == appointmentId);
+            return appointments;
+
         }
 
     }
